@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,11 +20,11 @@ under the License.
     .container {
       padding: 3px;
     }
-    
+
     .container:hover {
       background-color: #eee;
     }
-    
+
     .container a {
       cursor: pointer;
     }
@@ -32,4 +32,4 @@ under the License.
   <g:HTMLPanel styleName="{style.container}">
     <g:Anchor ui:field="link"></g:Anchor>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

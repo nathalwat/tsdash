@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,7 +19,7 @@ under the License.
   <ui:style>
     .container {
     }
-    
+
     .replacement {
       font-size: 12px;
       color: #666;
@@ -28,7 +28,7 @@ under the License.
       padding: 10px;
       margin: 30px 10px 30px 10px;
     }
-    
+
   </ui:style>
   <g:HTMLPanel styleName="{style.container}" ui:field="container">
     <g:HTML styleName="{style.replacement}" ui:field="replacement">
@@ -49,4 +49,4 @@ under the License.
     <g:HTML ui:field="json">
     </g:HTML>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

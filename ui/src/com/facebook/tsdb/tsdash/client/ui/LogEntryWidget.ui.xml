@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,20 +21,20 @@ under the License.
       padding: 5px;
       border-bottom: 1px dotted #666;
     }
-        
+
     .container:hover {
       background-color: #efefef;
     }
-        
+
     .title {
       font-weight: bold;
       color: #333;
     }
-     
+
     .message {
       color: #999;
     }
-     
+
     .title, .message {
       display: inline;
     }
@@ -43,4 +43,4 @@ under the License.
     <g:Label styleName="{style.title}" ui:field="title"></g:Label>
     <g:Label styleName="{style.message}" ui:field="message"></g:Label>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

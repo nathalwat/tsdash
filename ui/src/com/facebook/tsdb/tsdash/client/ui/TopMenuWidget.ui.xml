@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,7 +20,7 @@ under the License.
     .link {
       cursor: pointer;
     }
-    
+
     .clicked, .clicked:hover {
       font-weight: bold;
       color: #666;
@@ -28,7 +28,7 @@ under the License.
     }
   </ui:style>
   <g:HTMLPanel>
-    <g:Anchor styleName="{style.link}" ui:field="graph">graph</g:Anchor> &middot; 
-    <g:Anchor styleName="{style.link}" ui:field="log">log</g:Anchor> 
+    <g:Anchor styleName="{style.link}" ui:field="graph">graph</g:Anchor> &middot;
+    <g:Anchor styleName="{style.link}" ui:field="log">log</g:Anchor>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

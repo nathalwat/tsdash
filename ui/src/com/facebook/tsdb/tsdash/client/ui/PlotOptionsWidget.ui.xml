@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -21,7 +21,7 @@ under the License.
       padding: 3px 3px 3px 3px;
       margin: 3px 3px 20px 3px;
     }
-    
+
     .links {
     }
 
@@ -81,11 +81,11 @@ under the License.
     .toggleButton:hover {
       border-color: #999;
     }
-  
+
     .toggleButton:active {
       border-color: #000;
     }
-  
+
     .pressedToggleButton {
       background-color: #ccc;
       border-color: #666;

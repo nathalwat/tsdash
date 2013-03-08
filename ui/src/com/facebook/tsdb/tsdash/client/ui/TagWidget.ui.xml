@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -27,27 +27,27 @@ under the License.
       background-repeat: no-repeat;
       border-bottom: 2px solid white;
     }
-    
+
     .tag:hover {
       border-bottom: 2px solid #eee;
       color: black;
     }
-    
+
     .name {
       font-weight: bold;
     }
-    
+
     .value {
     }
 
     .name, .value {
       padding-top: 1px;
     }
-    
+
     .name, .value {
       padding: 1px 0 1px 1px;
     }
-    
+
     .del {
       width: 16px;
       height: 16px;
@@ -56,20 +56,20 @@ under the License.
       margin: 0 0 0 1px;
       cursor: pointer;
     }
-    
+
     .name, .value, .del {
       float: left;
     }
-    
+
     .apply {
       padding: 3px;
       cursor: pointer;
     }
-    
+
     .options, .apply {
       float: right;
     }
-    
+
   </ui:style>
   <g:HTMLPanel ui:field="container" styleName="{style.tag}">
     <g:Label styleName="{style.name}" ui:field="name"></g:Label>
@@ -78,6 +78,6 @@ under the License.
     <g:ListBox ui:field="options" styleName="{style.options}">
     </g:ListBox>
     <g:Label styleName="{style.del}" ui:field="removeValue" title="remove tag value"></g:Label>
-    <g:HTML styleName="clear"></g:HTML> 
+    <g:HTML styleName="clear"></g:HTML>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

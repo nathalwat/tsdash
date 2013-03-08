@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,7 +22,7 @@ under the License.
       margin: 5px 1px 1px 1px;
       border-top: 1px dotted #ccc;
     }
-  
+
     .metric .name {
       font-weight: bold;
       font-size: 16px;
@@ -32,19 +32,19 @@ under the License.
       margin: 1px;
       float: left;
     }
-  
+
     .metric .enabled {
       color: black;
     }
-    
+
     .metric .disabled {
       color: #CCC;
     }
-  
+
     .metric .blue {
       color: #3AA9E0;
     }
-  
+
     .metric .del, .metric .clone {
       cursor: pointer;
       width: 20px;
@@ -53,20 +53,20 @@ under the License.
       margin: 4px 3px 1px 3px;
       float: right;
     }
-  
+
     .metric .del {
       background-image: url("img/gem_remove.png");
     }
-  
+
     .metric .clone {
       background-image: url("img/clone.png");
       background-position: 0 1px;
     }
-  
+
     .metric .loading {
       background-image: url("img/loading.gif");
     }
-  
+
     .metric .toggleButton {
       width: 24px;
       height: 24px;
@@ -79,7 +79,7 @@ under the License.
       margin-top: 3px;
       margin-right: 3px;
     }
-  
+
     .metric .aggregator {
       float: left;
       padding: 3px 3px 1px 20px;
@@ -89,26 +89,26 @@ under the License.
       display: inline;
       margin: 3px 3px 0px 32px;
     }
-  
+
     .metric .toggleButton:hover {
       border-color: #999;
     }
-  
+
     .metric .toggleButton:active {
       border-color: #000;
     }
-  
+
     .metric .pressedToggleButton {
       background-color: #ccc;
       border-color: #666;
     }
-  
+
     .top:hover .del, .top:hover .clone {
     }
 
     .tags {
     }
-  
+
     .metric .commit {
       float: right;
     }
@@ -120,7 +120,7 @@ under the License.
       <g:Label ui:field="delete" styleName="{style.del}" title="remove this metric">
       </g:Label>
       <g:Label ui:field="clone" styleName="{style.clone}" title="clone this metric">
-      </g:Label>      
+      </g:Label>
       <g:HTML visible="false" ui:field="rightAxis" styleName="{style.toggleButton}" title="place on the right Y axis">
         <img src="img/right_axis.png" style="vertical-align: middle;" />
       </g:HTML>
@@ -140,4 +140,4 @@ under the License.
       <!-- <g:HTML styleName="clear"></g:HTML>  -->
     </g:HTMLPanel>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

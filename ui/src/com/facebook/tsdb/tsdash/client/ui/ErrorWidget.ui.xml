@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -25,7 +25,7 @@ under the License.
       border: 1px solid #8A0626;
       font-size: 12px;
     }
-    
+
     .container a {
       color: #FFEDF2;
       text-decoration: underline;
@@ -33,7 +33,7 @@ under the License.
       cursor: pointer;
       margin: 3px;
     }
-    
+
     .title {
       display: inline;
     }
@@ -42,4 +42,4 @@ under the License.
     <g:Label styleName="{style.title}" ui:field="title"></g:Label>
     <g:Anchor ui:field="detailsButton">details</g:Anchor>
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

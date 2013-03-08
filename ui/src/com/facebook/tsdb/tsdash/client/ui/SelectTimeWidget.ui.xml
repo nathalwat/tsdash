@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -56,7 +56,7 @@ under the License.
     }
 
     .historyOption {
-      margin: 0px 3px 5px 5px; 
+      margin: 0px 3px 5px 5px;
       display: block;
       line-height: 20px;
       border-bottom: 2px solid white;
@@ -109,7 +109,7 @@ under the License.
             title="time range selection"/>
       </g:HTML>
       <g:Anchor styleName="{style.active}" ui:field="historyButton">history</g:Anchor>
-      <g:Anchor styleName="{style.active}" ui:field="absoluteButton">absolute</g:Anchor>      
+      <g:Anchor styleName="{style.active}" ui:field="absoluteButton">absolute</g:Anchor>
     </g:HorizontalPanel>
     <g:HTMLPanel styleName="{style.modeContainer}" visible="false" ui:field="historyContainer">
       <g:Label styleName="{style.historyPre}">last</g:Label>
@@ -131,4 +131,4 @@ under the License.
       </g:HorizontalPanel>
     </g:HTMLPanel>
   </g:VerticalPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

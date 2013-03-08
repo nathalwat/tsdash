@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2011 Facebook, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,4 +22,4 @@ under the License.
   </ui:style>
   <g:HTMLPanel ui:field="container" styleName="{style.container}">
   </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>
