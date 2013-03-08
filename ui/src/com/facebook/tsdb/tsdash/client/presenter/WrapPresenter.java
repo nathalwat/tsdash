@@ -23,34 +23,34 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class WrapPresenter implements Presenter {
 
-    private final HTMLPanel wrapper = new HTMLPanel("");
-    private String className = "wrapper";
+  private final HTMLPanel wrapper = new HTMLPanel("");
+  private String className = "wrapper";
 
-    private final ArrayList<Presenter> presenters = new ArrayList<Presenter>();
+  private final ArrayList<Presenter> presenters = new ArrayList<Presenter>();
 
-    public WrapPresenter() {
+  public WrapPresenter() {
+  }
+
+  public WrapPresenter(String className) {
+    this.className = className;
+  }
+
+  public void add(Presenter presenter) {
+    presenters.add(presenter);
+  }
+
+  public ArrayList<Presenter> getPresenters() {
+    return presenters;
+  }
+
+  @Override
+  public void go(HasWidgets container, ApplicationState appState) {
+    wrapper.clear();
+    wrapper.setStyleName(className);
+    for (Presenter presenter : presenters) {
+      presenter.go(wrapper, appState);
     }
-
-    public WrapPresenter(String className) {
-        this.className = className;
-    }
-
-    public void add(Presenter presenter) {
-        presenters.add(presenter);
-    }
-
-    public ArrayList<Presenter> getPresenters() {
-        return presenters;
-    }
-
-    @Override
-    public void go(HasWidgets container, ApplicationState appState) {
-        wrapper.clear();
-        wrapper.setStyleName(className);
-        for (Presenter presenter : presenters) {
-            presenter.go(wrapper, appState);
-        }
-        container.add(wrapper);
-    }
+    container.add(wrapper);
+  }
 
 }

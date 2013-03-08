@@ -37,92 +37,92 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MetricsFormWidget extends Composite implements
-        MetricPresenter.MetricsFormWidget {
+    MetricPresenter.MetricsFormWidget {
 
-    private static MetricsFormWidgetUiBinder uiBinder = GWT
-            .create(MetricsFormWidgetUiBinder.class);
+  private static MetricsFormWidgetUiBinder uiBinder = GWT
+      .create(MetricsFormWidgetUiBinder.class);
 
-    interface MetricsFormWidgetUiBinder extends
-            UiBinder<Widget, MetricsFormWidget> {
-    }
+  interface MetricsFormWidgetUiBinder extends
+      UiBinder<Widget, MetricsFormWidget> {
+  }
 
-    private final MultiWordSuggestOracle suggestOracle =
-        new MultiWordSuggestOracle();
+  private final MultiWordSuggestOracle suggestOracle =
+    new MultiWordSuggestOracle();
 
-    @UiField
-    Button addMetric;
+  @UiField
+  Button addMetric;
 
-    @UiField
-    HTMLPanel metricsContainer;
+  @UiField
+  HTMLPanel metricsContainer;
 
-    @UiField
-    HTMLPanel container;
+  @UiField
+  HTMLPanel container;
 
-    @UiField
-    Image loading;
+  @UiField
+  Image loading;
 
-    @UiField
-    Anchor viewAll;
+  @UiField
+  Anchor viewAll;
 
-    @UiField(provided = true)
-    SuggestBox suggest;
+  @UiField(provided = true)
+  SuggestBox suggest;
 
-    public MetricsFormWidget() {
-        suggest = new SuggestBox(suggestOracle);
-        initWidget(uiBinder.createAndBindUi(this));
-        suggest.getTextBox().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                suggest.getTextBox().setFocus(true);
-                suggest.getTextBox().selectAll();
-            }
-        });
-    }
+  public MetricsFormWidget() {
+    suggest = new SuggestBox(suggestOracle);
+    initWidget(uiBinder.createAndBindUi(this));
+    suggest.getTextBox().addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        suggest.getTextBox().setFocus(true);
+        suggest.getTextBox().selectAll();
+      }
+    });
+  }
 
-    @Override
-    public void focusSuggest(boolean focus) {
-        suggest.getTextBox().setFocus(focus);
-    }
+  @Override
+  public void focusSuggest(boolean focus) {
+    suggest.getTextBox().setFocus(focus);
+  }
 
-    @Override
-    public HasValue<String> typedMetric() {
-        return suggest.getTextBox();
-    }
+  @Override
+  public HasValue<String> typedMetric() {
+    return suggest.getTextBox();
+  }
 
-    @Override
-    public HasClickHandlers addMetricButton() {
-        return addMetric;
-    }
+  @Override
+  public HasClickHandlers addMetricButton() {
+    return addMetric;
+  }
 
-    @Override
-    public HasWidgets metricsContainer() {
-        return metricsContainer;
-    }
+  @Override
+  public HasWidgets metricsContainer() {
+    return metricsContainer;
+  }
 
-    @Override
-    public void setMetricSuggestions(ArrayList<String> options) {
-        suggestOracle.clear();
-        suggestOracle.addAll(options);
-    }
+  @Override
+  public void setMetricSuggestions(ArrayList<String> options) {
+    suggestOracle.clear();
+    suggestOracle.addAll(options);
+  }
 
-    @Override
-    public int metricsCount() {
-        return metricsContainer.getWidgetCount();
-    }
+  @Override
+  public int metricsCount() {
+    return metricsContainer.getWidgetCount();
+  }
 
-    @Override
-    public void setLoadingVisible(boolean visible) {
-        loading.setVisible(visible);
-    }
+  @Override
+  public void setLoadingVisible(boolean visible) {
+    loading.setVisible(visible);
+  }
 
-    @Override
-    public HasClickHandlers viewAllButton() {
-        return viewAll;
-    }
+  @Override
+  public HasClickHandlers viewAllButton() {
+    return viewAll;
+  }
 
-    @Override
-    public HasText viewAllButtonText() {
-        return viewAll;
-    }
+  @Override
+  public HasText viewAllButtonText() {
+    return viewAll;
+  }
 
 }

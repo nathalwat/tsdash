@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface TagEventHandler extends EventHandler {
 
-    public void onSet(TagEvent event);
+  public void onSet(TagEvent event);
 
-    public void onRemove(TagEvent event);
+  public void onRemove(TagEvent event);
 }

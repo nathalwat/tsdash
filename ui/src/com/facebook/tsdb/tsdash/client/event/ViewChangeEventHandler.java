@@ -18,5 +18,5 @@ package com.facebook.tsdb.tsdash.client.event;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface ViewChangeEventHandler extends EventHandler {
-    public void onChange(ViewChangeEvent event);
+  public void onChange(ViewChangeEvent event);
 }

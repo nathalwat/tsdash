@@ -24,12 +24,12 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class TSDashEntryPoint implements EntryPoint {
 
-    @Override
-    public void onModuleLoad() {
-        HandlerManager eventBus = new HandlerManager(null);
-        HTTPService service = new HTTPService();
-        ApplicationController appCtrl = new ApplicationController(eventBus,
-                service);
-        appCtrl.go();
-    }
+  @Override
+  public void onModuleLoad() {
+    HandlerManager eventBus = new HandlerManager(null);
+    HTTPService service = new HTTPService();
+    ApplicationController appCtrl = new ApplicationController(eventBus,
+        service);
+    appCtrl.go();
+  }
 }

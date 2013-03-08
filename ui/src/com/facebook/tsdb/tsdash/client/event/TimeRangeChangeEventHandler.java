@@ -18,5 +18,5 @@ package com.facebook.tsdb.tsdash.client.event;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface TimeRangeChangeEventHandler extends EventHandler {
-    public void onChange(TimeRangeChangeEvent event);
+  public void onChange(TimeRangeChangeEvent event);
 }

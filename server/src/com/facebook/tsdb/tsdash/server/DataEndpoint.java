@@ -34,65 +34,65 @@ import com.facebook.tsdb.tsdash.server.model.MetricQuery;
 
 public class DataEndpoint extends TsdbServlet {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        try {
-            long ts = System.currentTimeMillis();
-            // decode parameters
-            String jsonParams = request.getParameter("params");
-            if (jsonParams == null) {
-                throw new Exception("Parameters not specified");
-            }
-            JSONObject jsonParamsObj = (JSONObject) JSONValue.parse(jsonParams);
-            long tsFrom = (Long) jsonParamsObj.get("tsFrom");
-            long tsTo = (Long) jsonParamsObj.get("tsTo");
-            JSONArray metricsArray = (JSONArray) jsonParamsObj.get("metrics");
-            if (metricsArray.size() == 0) {
-                throw new Exception("No metrics to fetch");
-            }
-            MetricQuery[] metricQueries = new MetricQuery[metricsArray.size()];
-            for (int i = 0; i < metricsArray.size(); i++) {
-                metricQueries[i] = MetricQuery
-                        .fromJSONObject((JSONObject) metricsArray.get(i));
-            }
+  @Override
+  @SuppressWarnings("unchecked")
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    response.setContentType("text/plain");
+    PrintWriter out = response.getWriter();
+    try {
+      long ts = System.currentTimeMillis();
+      // decode parameters
+      String jsonParams = request.getParameter("params");
+      if (jsonParams == null) {
+        throw new Exception("Parameters not specified");
+      }
+      JSONObject jsonParamsObj = (JSONObject) JSONValue.parse(jsonParams);
+      long tsFrom = (Long) jsonParamsObj.get("tsFrom");
+      long tsTo = (Long) jsonParamsObj.get("tsTo");
+      JSONArray metricsArray = (JSONArray) jsonParamsObj.get("metrics");
+      if (metricsArray.size() == 0) {
+        throw new Exception("No metrics to fetch");
+      }
+      MetricQuery[] metricQueries = new MetricQuery[metricsArray.size()];
+      for (int i = 0; i < metricsArray.size(); i++) {
+        metricQueries[i] = MetricQuery
+            .fromJSONObject((JSONObject) metricsArray.get(i));
+      }
 
-            TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
-            Metric[] metrics = new Metric[metricQueries.length];
-            for (int i = 0; i < metrics.length; i++) {
-                MetricQuery q = metricQueries[i];
-                metrics[i] = dataProvider.fetchMetric(q.name, tsFrom, tsTo,
-                        q.tags, q.orders);
-                metrics[i] = metrics[i].dissolveTags(q.getDissolveList(),
-                        q.aggregator);
-                if (q.rate) {
-                    metrics[i].computeRate();
-                }
-            }
-            long loadTime = System.currentTimeMillis() - ts;
-            JSONObject responseObj = new JSONObject();
-            JSONArray encodedMetrics = new JSONArray();
-            for (Metric metric : metrics) {
-                encodedMetrics.add(metric.toJSONObject());
-            }
-            responseObj.put("metrics", encodedMetrics);
-            responseObj.put("loadtime", loadTime);
-            DataTable dataTable = new DataTable(metrics);
-            responseObj.put("datatable", dataTable.toJSONObject());
-            out.println(responseObj.toJSONString());
-            long encodingTime = System.currentTimeMillis() - ts - loadTime;
-            logger.info("[Data] time frame: " + (tsTo - tsFrom) + "s, "
-                    + "load time: " + loadTime + "ms, " + "encoding time: "
-                    + encodingTime + "ms");
-        } catch (Exception e) {
-            out.println(getErrorResponse(e));
+      TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
+      Metric[] metrics = new Metric[metricQueries.length];
+      for (int i = 0; i < metrics.length; i++) {
+        MetricQuery q = metricQueries[i];
+        metrics[i] = dataProvider.fetchMetric(q.name, tsFrom, tsTo,
+            q.tags, q.orders);
+        metrics[i] = metrics[i].dissolveTags(q.getDissolveList(),
+            q.aggregator);
+        if (q.rate) {
+          metrics[i].computeRate();
         }
-        out.close();
+      }
+      long loadTime = System.currentTimeMillis() - ts;
+      JSONObject responseObj = new JSONObject();
+      JSONArray encodedMetrics = new JSONArray();
+      for (Metric metric : metrics) {
+        encodedMetrics.add(metric.toJSONObject());
+      }
+      responseObj.put("metrics", encodedMetrics);
+      responseObj.put("loadtime", loadTime);
+      DataTable dataTable = new DataTable(metrics);
+      responseObj.put("datatable", dataTable.toJSONObject());
+      out.println(responseObj.toJSONString());
+      long encodingTime = System.currentTimeMillis() - ts - loadTime;
+      logger.info("[Data] time frame: " + (tsTo - tsFrom) + "s, "
+          + "load time: " + loadTime + "ms, " + "encoding time: "
+          + encodingTime + "ms");
+    } catch (Exception e) {
+      out.println(getErrorResponse(e));
     }
+    out.close();
+  }
 
 }

@@ -19,39 +19,39 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class PlotOptionsEvent extends GwtEvent<PlotOptionsEventHandler> {
 
-    public static final GwtEvent.Type<PlotOptionsEventHandler> TYPE =
-        new GwtEvent.Type<PlotOptionsEventHandler>();
+  public static final GwtEvent.Type<PlotOptionsEventHandler> TYPE =
+    new GwtEvent.Type<PlotOptionsEventHandler>();
 
-    private final boolean interactive;
-    private final boolean surface;
-    private final boolean palette;
+  private final boolean interactive;
+  private final boolean surface;
+  private final boolean palette;
 
-    public PlotOptionsEvent(boolean interactive, boolean surface,
-            boolean palette) {
-        this.interactive = interactive;
-        this.surface = surface;
-        this.palette = palette;
-    }
+  public PlotOptionsEvent(boolean interactive, boolean surface,
+      boolean palette) {
+    this.interactive = interactive;
+    this.surface = surface;
+    this.palette = palette;
+  }
 
-    public boolean isInteractive() {
-        return interactive;
-    }
+  public boolean isInteractive() {
+    return interactive;
+  }
 
-    public boolean surfaceEnabled() {
-        return surface;
-    }
+  public boolean surfaceEnabled() {
+    return surface;
+  }
 
-    public boolean colorPaletteEnabled() {
-        return palette;
-    }
+  public boolean colorPaletteEnabled() {
+    return palette;
+  }
 
-    @Override
-    public GwtEvent.Type<PlotOptionsEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<PlotOptionsEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(PlotOptionsEventHandler handler) {
-        handler.onPlotOptionsChange(this);
-    }
+  @Override
+  protected void dispatch(PlotOptionsEventHandler handler) {
+    handler.onPlotOptionsChange(this);
+  }
 }

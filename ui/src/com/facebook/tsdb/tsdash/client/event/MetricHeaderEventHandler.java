@@ -19,5 +19,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface MetricHeaderEventHandler extends EventHandler {
 
-    void onHeadersLoaded(MetricHeaderEvent event);
+  void onHeadersLoaded(MetricHeaderEvent event);
 }

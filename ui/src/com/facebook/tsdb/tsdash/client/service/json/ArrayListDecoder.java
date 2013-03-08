@@ -22,13 +22,13 @@ import com.google.gwt.json.client.JSONParser;
 
 public class ArrayListDecoder extends JSONDecoder<ArrayList<String>> {
 
-    @Override
-    public ArrayList<String> decode(String jsonText) {
-        JSONArray jsonArray = JSONParser.parseStrict(jsonText).isArray();
-        ArrayList<String> result = new ArrayList<String>();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            result.add(jsonArray.get(i).isString().stringValue());
-        }
-        return result;
+  @Override
+  public ArrayList<String> decode(String jsonText) {
+    JSONArray jsonArray = JSONParser.parseStrict(jsonText).isArray();
+    ArrayList<String> result = new ArrayList<String>();
+    for (int i = 0; i < jsonArray.size(); i++) {
+      result.add(jsonArray.get(i).isString().stringValue());
     }
+    return result;
+  }
 }

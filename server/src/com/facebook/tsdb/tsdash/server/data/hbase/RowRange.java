@@ -22,79 +22,79 @@ import com.google.common.primitives.UnsignedBytes;
 
 public class RowRange {
 
-    public static final int PREFIX_TS_ROUND = 60 * 60; // 1h, in seconds
+  public static final int PREFIX_TS_ROUND = 60 * 60; // 1h, in seconds
 
-    private final byte[] start = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
-    private final byte[] stop = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
-    private final byte[] last = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
+  private final byte[] start = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
+  private final byte[] stop = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
+  private final byte[] last = new byte[ID.BYTES + RowKey.PREFIX_TS_BYTES];
 
-    private final long startOffset;
-    private final long lastOffset;
+  private final long startOffset;
+  private final long lastOffset;
 
-    public RowRange(byte[] metricID, long fromTs, long toTs) {
-        Arrays.fill(start, (byte) 0);
-        Arrays.fill(stop, (byte) 0);
-        for (int i = 0; i < ID.BYTES; i++) {
-            start[i] = metricID[i];
-            stop[i] = metricID[i];
-            last[i] = metricID[i];
-        }
-        long startTs = roundTs(fromTs);
-        long lastTs = roundTs(toTs);
-        long stopTs = roundTs(toTs) + PREFIX_TS_ROUND;
-        int shift = 0;
-        for (int i = ID.BYTES + RowKey.PREFIX_TS_BYTES - 1; i >= ID.BYTES; i--){
-            start[i] = (byte) ((startTs >> shift) & 0xFF);
-            stop[i] = (byte) ((stopTs >> shift) & 0xFF);
-            last[i] = (byte) ((lastTs >> shift) & 0xFF);
-            shift += 8;
-        }
-        startOffset = fromTs % PREFIX_TS_ROUND;
-        lastOffset = toTs % PREFIX_TS_ROUND;
+  public RowRange(byte[] metricID, long fromTs, long toTs) {
+    Arrays.fill(start, (byte) 0);
+    Arrays.fill(stop, (byte) 0);
+    for (int i = 0; i < ID.BYTES; i++) {
+      start[i] = metricID[i];
+      stop[i] = metricID[i];
+      last[i] = metricID[i];
     }
-
-    public byte[] getStart() {
-        return start;
+    long startTs = roundTs(fromTs);
+    long lastTs = roundTs(toTs);
+    long stopTs = roundTs(toTs) + PREFIX_TS_ROUND;
+    int shift = 0;
+    for (int i = ID.BYTES + RowKey.PREFIX_TS_BYTES - 1; i >= ID.BYTES; i--){
+      start[i] = (byte) ((startTs >> shift) & 0xFF);
+      stop[i] = (byte) ((stopTs >> shift) & 0xFF);
+      last[i] = (byte) ((lastTs >> shift) & 0xFF);
+      shift += 8;
     }
+    startOffset = fromTs % PREFIX_TS_ROUND;
+    lastOffset = toTs % PREFIX_TS_ROUND;
+  }
 
-    public byte[] getStop() {
-        return stop;
-    }
+  public byte[] getStart() {
+    return start;
+  }
 
-    public byte[] getLast() {
-        return last;
-    }
+  public byte[] getStop() {
+    return stop;
+  }
 
-    public long getStartOffset() {
-        return startOffset;
-    }
+  public byte[] getLast() {
+    return last;
+  }
 
-    public long getLastOffset() {
-        return lastOffset;
-    }
+  public long getStartOffset() {
+    return startOffset;
+  }
 
-    public static long roundTs(long ts) {
-        return ts - (ts % PREFIX_TS_ROUND);
-    }
+  public long getLastOffset() {
+    return lastOffset;
+  }
 
-    @Override
-    public String toString() {
-        String res = "";
-        res += UnsignedBytes.join(" ", start)
-                + " offset: "
-                + UnsignedBytes.join(" ",
-                        DataPointQualifier.packedOffset(startOffset)) + '\n';
-        res += UnsignedBytes.join(" ", last)
-                + " offset: "
-                + UnsignedBytes.join(" ",
-                        DataPointQualifier.packedOffset(lastOffset)) + '\n';
-        res += startOffset + " " + lastOffset + '\n';
-        res += UnsignedBytes.join(" ", stop) + '\n';
-        return res;
-    }
+  public static long roundTs(long ts) {
+    return ts - (ts % PREFIX_TS_ROUND);
+  }
 
-    public static int prefixBytes() {
-        return ID.BYTES + RowKey.PREFIX_TS_BYTES;
-    }
+  @Override
+  public String toString() {
+    String res = "";
+    res += UnsignedBytes.join(" ", start)
+        + " offset: "
+        + UnsignedBytes.join(" ",
+            DataPointQualifier.packedOffset(startOffset)) + '\n';
+    res += UnsignedBytes.join(" ", last)
+        + " offset: "
+        + UnsignedBytes.join(" ",
+            DataPointQualifier.packedOffset(lastOffset)) + '\n';
+    res += startOffset + " " + lastOffset + '\n';
+    res += UnsignedBytes.join(" ", stop) + '\n';
+    return res;
+  }
+
+  public static int prefixBytes() {
+    return ID.BYTES + RowKey.PREFIX_TS_BYTES;
+  }
 
 }

@@ -31,65 +31,65 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ErrorPresenter implements Presenter {
 
-    public interface ErrorWidget {
-        void setVisible(boolean visible);
+  public interface ErrorWidget {
+    void setVisible(boolean visible);
 
-        HasText title();
+    HasText title();
 
-        HasHTML details();
+    HasHTML details();
 
-        void showDetails();
+    void showDetails();
 
-        HasClickHandlers detailsButton();
-    }
+    HasClickHandlers detailsButton();
+  }
 
-    private final HandlerManager eventBus;
-    private final ErrorWidget widget;
+  private final HandlerManager eventBus;
+  private final ErrorWidget widget;
 
-    public ErrorPresenter(HandlerManager eventBus, ErrorWidget widget) {
-        this.eventBus = eventBus;
-        this.widget = widget;
-        listenErrorEvent();
-        bindWidget();
-    }
+  public ErrorPresenter(HandlerManager eventBus, ErrorWidget widget) {
+    this.eventBus = eventBus;
+    this.widget = widget;
+    listenErrorEvent();
+    bindWidget();
+  }
 
-    private void bindWidget() {
-        widget.detailsButton().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                widget.showDetails();
-            }
-        });
-    }
+  private void bindWidget() {
+    widget.detailsButton().addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        widget.showDetails();
+      }
+    });
+  }
 
-    private void listenErrorEvent() {
-        eventBus.addHandler(ErrorEvent.TYPE, new ErrorEventHandler() {
-            @Override
-            public void onError(ErrorEvent event) {
-                widget.setVisible(true);
-                Throwable error = event.getCause();
-                widget.title().setText(error.toString());
-                String details = null;
-                // figure out the details
-                try {
-                    throw error;
-                } catch (JSONParseException e) {
-                    details = e.getIncorrectJSONText();
-                } catch (ServiceException e) {
-                    details = e.getServerStackTrace();
-                } catch (Throwable e) {
-                    for (StackTraceElement stack : e.getStackTrace()) {
-                        details += stack.toString() + '\n';
-                    }
-                }
-                widget.details().setHTML("<pre>" + details + "</pre>");
-            }
-        });
-    }
+  private void listenErrorEvent() {
+    eventBus.addHandler(ErrorEvent.TYPE, new ErrorEventHandler() {
+      @Override
+      public void onError(ErrorEvent event) {
+        widget.setVisible(true);
+        Throwable error = event.getCause();
+        widget.title().setText(error.toString());
+        String details = null;
+        // figure out the details
+        try {
+          throw error;
+        } catch (JSONParseException e) {
+          details = e.getIncorrectJSONText();
+        } catch (ServiceException e) {
+          details = e.getServerStackTrace();
+        } catch (Throwable e) {
+          for (StackTraceElement stack : e.getStackTrace()) {
+            details += stack.toString() + '\n';
+          }
+        }
+        widget.details().setHTML("<pre>" + details + "</pre>");
+      }
+    });
+  }
 
-    @Override
-    public void go(HasWidgets container, ApplicationState appState) {
-        container.add((Widget) widget);
-    }
+  @Override
+  public void go(HasWidgets container, ApplicationState appState) {
+    container.add((Widget) widget);
+  }
 
 }

@@ -22,23 +22,23 @@ import com.google.gwt.json.client.JSONArray;
 
 public class DataPoint {
 
-    public long ts;
-    public double value;
-    private static DateTimeFormat formatter = DateTimeFormat
-            .getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND);
+  public long ts;
+  public double value;
+  private static DateTimeFormat formatter = DateTimeFormat
+      .getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND);
 
-    public DataPoint(long ts, double value) {
-        this.ts = ts;
-        this.value = value;
-    }
+  public DataPoint(long ts, double value) {
+    this.ts = ts;
+    this.value = value;
+  }
 
-    public static DataPoint fromJSONObject(JSONArray obj) {
-        long ts = (long) obj.get(0).isNumber().doubleValue();
-        double value = (long) obj.get(1).isNumber().doubleValue();
-        return new DataPoint(ts, value);
-    }
+  public static DataPoint fromJSONObject(JSONArray obj) {
+    long ts = (long) obj.get(0).isNumber().doubleValue();
+    double value = (long) obj.get(1).isNumber().doubleValue();
+    return new DataPoint(ts, value);
+  }
 
-    public String getDayTime() {
-        return formatter.format(new Date(ts * 1000));
-    }
+  public String getDayTime() {
+    return formatter.format(new Date(ts * 1000));
+  }
 }

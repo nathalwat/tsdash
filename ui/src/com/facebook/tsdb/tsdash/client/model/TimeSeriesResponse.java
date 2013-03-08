@@ -21,16 +21,16 @@ import com.google.gwt.json.client.JSONObject;
 
 public class TimeSeriesResponse {
 
-    public long dataSize = 0; // bytes
-    public long serverLoadTime = 0; // ms
-    public JSONObject timeSeriesJSON = null;
-    public ArrayList<MetricHeader> metrics = new ArrayList<MetricHeader>();
-    public int rows = 0;
+  public long dataSize = 0; // bytes
+  public long serverLoadTime = 0; // ms
+  public JSONObject timeSeriesJSON = null;
+  public ArrayList<MetricHeader> metrics = new ArrayList<MetricHeader>();
+  public int rows = 0;
 
-    @Override
-    public String toString() {
-        return "Data: " + dataSize + " bytes; " + "Load time: "
-                + serverLoadTime + " ms; " + "DataTable rows: " + rows + "; "
-                + "Metrics loaded: " + metrics.size();
-    }
+  @Override
+  public String toString() {
+    return "Data: " + dataSize + " bytes; " + "Load time: "
+        + serverLoadTime + " ms; " + "DataTable rows: " + rows + "; "
+        + "Metrics loaded: " + metrics.size();
+  }
 }

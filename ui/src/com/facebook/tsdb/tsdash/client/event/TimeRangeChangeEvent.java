@@ -21,32 +21,32 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class TimeRangeChangeEvent extends GwtEvent<TimeRangeChangeEventHandler> {
 
-    public static final GwtEvent.Type<TimeRangeChangeEventHandler> TYPE =
-        new GwtEvent.Type<TimeRangeChangeEventHandler>();
+  public static final GwtEvent.Type<TimeRangeChangeEventHandler> TYPE =
+    new GwtEvent.Type<TimeRangeChangeEventHandler>();
 
-    private final TimeMode mode;
-    private final TimeRange timeRange;
+  private final TimeMode mode;
+  private final TimeRange timeRange;
 
-    public TimeRangeChangeEvent(TimeMode mode, TimeRange timeRange) {
-        this.mode = mode;
-        this.timeRange = timeRange;
-    }
+  public TimeRangeChangeEvent(TimeMode mode, TimeRange timeRange) {
+    this.mode = mode;
+    this.timeRange = timeRange;
+  }
 
-    public TimeMode getMode() {
-        return mode;
-    }
+  public TimeMode getMode() {
+    return mode;
+  }
 
-    public TimeRange getTimeRange() {
-        return timeRange;
-    }
+  public TimeRange getTimeRange() {
+    return timeRange;
+  }
 
-    @Override
-    public GwtEvent.Type<TimeRangeChangeEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<TimeRangeChangeEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(TimeRangeChangeEventHandler handler) {
-        handler.onChange(this);
-    }
+  @Override
+  protected void dispatch(TimeRangeChangeEventHandler handler) {
+    handler.onChange(this);
+  }
 }

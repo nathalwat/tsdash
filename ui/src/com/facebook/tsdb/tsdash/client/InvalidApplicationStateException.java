@@ -17,9 +17,9 @@ package com.facebook.tsdb.tsdash.client;
 
 public class InvalidApplicationStateException extends Exception {
 
-    private static final long serialVersionUID = 1845973050406849636L;
+  private static final long serialVersionUID = 1845973050406849636L;
 
-    public InvalidApplicationStateException(String message) {
-        super(message);
-    }
+  public InvalidApplicationStateException(String message) {
+    super(message);
+  }
 }

@@ -17,9 +17,9 @@ package com.facebook.tsdb.tsdash.server.gnuplot;
 
 public class GnuplotException extends Exception {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public GnuplotException(String message) {
-        super(message);
-    }
+  public GnuplotException(String message) {
+    super(message);
+  }
 }

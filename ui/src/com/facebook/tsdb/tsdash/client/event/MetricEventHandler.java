@@ -19,11 +19,11 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface MetricEventHandler extends EventHandler {
 
-    public void onAdd(MetricEvent event);
+  public void onAdd(MetricEvent event);
 
-    public void onDelete(MetricEvent event);
+  public void onDelete(MetricEvent event);
 
-    public void onAggregatorChange(MetricEvent event);
+  public void onAggregatorChange(MetricEvent event);
 
-    public void onToggle(MetricEvent event);
+  public void onToggle(MetricEvent event);
 }

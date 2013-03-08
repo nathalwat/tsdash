@@ -30,56 +30,56 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ErrorWidget extends Composite implements
-        ErrorPresenter.ErrorWidget {
+    ErrorPresenter.ErrorWidget {
 
-    private static ErrorWidgetUiBinder uiBinder = GWT
-            .create(ErrorWidgetUiBinder.class);
+  private static ErrorWidgetUiBinder uiBinder = GWT
+      .create(ErrorWidgetUiBinder.class);
 
-    interface ErrorWidgetUiBinder extends UiBinder<Widget, ErrorWidget> {
-    }
+  interface ErrorWidgetUiBinder extends UiBinder<Widget, ErrorWidget> {
+  }
 
-    @UiField
-    Label title;
+  @UiField
+  Label title;
 
-    HTML details = new HTML("");
+  HTML details = new HTML("");
 
-    @UiField
-    Anchor detailsButton;
+  @UiField
+  Anchor detailsButton;
 
-    PopupPanel popup = new PopupPanel(true, true);
+  PopupPanel popup = new PopupPanel(true, true);
 
-    public ErrorWidget() {
-        setupWidget();
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public ErrorWidget() {
+    setupWidget();
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    private void setupWidget() {
-        popup.setWidget(details);
-        popup.setGlassEnabled(true);
-        details.addStyleName("errorDetails");
-        popup.addStyleName("errorDetailsPopup");
-    }
+  private void setupWidget() {
+    popup.setWidget(details);
+    popup.setGlassEnabled(true);
+    details.addStyleName("errorDetails");
+    popup.addStyleName("errorDetailsPopup");
+  }
 
-    @Override
-    public HasText title() {
-        return title;
-    }
+  @Override
+  public HasText title() {
+    return title;
+  }
 
-    @Override
-    public void showDetails() {
-        popup.setVisible(true);
-        popup.center();
-        popup.show();
-    }
+  @Override
+  public void showDetails() {
+    popup.setVisible(true);
+    popup.center();
+    popup.show();
+  }
 
-    @Override
-    public HasHTML details() {
-        return details;
-    }
+  @Override
+  public HasHTML details() {
+    return details;
+  }
 
-    @Override
-    public HasClickHandlers detailsButton() {
-        return detailsButton;
-    }
+  @Override
+  public HasClickHandlers detailsButton() {
+    return detailsButton;
+  }
 
 }

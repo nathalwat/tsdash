@@ -17,23 +17,23 @@ package com.facebook.tsdb.tsdash.server.data.agg;
 
 public class MaxAggregator implements Aggregator {
 
-    private double max = -Double.MAX_VALUE;
+  private double max = -Double.MAX_VALUE;
 
-    @Override
-    public void reset() {
-        max = -Double.MAX_VALUE;
-    }
+  @Override
+  public void reset() {
+    max = -Double.MAX_VALUE;
+  }
 
-    @Override
-    public void add(double value) {
-        if (value > max) {
-            max = value;
-        }
+  @Override
+  public void add(double value) {
+    if (value > max) {
+      max = value;
     }
+  }
 
-    @Override
-    public double getValue() {
-        return max;
-    }
+  @Override
+  public double getValue() {
+    return max;
+  }
 
 }

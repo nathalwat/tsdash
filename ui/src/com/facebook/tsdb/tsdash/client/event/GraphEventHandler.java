@@ -18,9 +18,9 @@ package com.facebook.tsdb.tsdash.client.event;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface GraphEventHandler extends EventHandler {
-    void onLoadingData(GraphEvent event);
+  void onLoadingData(GraphEvent event);
 
-    void onStartRendering(GraphEvent event);
+  void onStartRendering(GraphEvent event);
 
-    void onLoaded(GraphEvent event);
+  void onLoaded(GraphEvent event);
 }

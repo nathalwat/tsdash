@@ -27,21 +27,21 @@ import com.facebook.tsdb.tsdash.client.presenter.LogPresenter;
 
 public class LogWidget extends Composite implements LogPresenter.LogWidget {
 
-    private static LogWidgetUiBinder uiBinder = GWT
-            .create(LogWidgetUiBinder.class);
+  private static LogWidgetUiBinder uiBinder = GWT
+      .create(LogWidgetUiBinder.class);
 
-    interface LogWidgetUiBinder extends UiBinder<Widget, LogWidget> {
-    }
+  interface LogWidgetUiBinder extends UiBinder<Widget, LogWidget> {
+  }
 
-    public LogWidget() {
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public LogWidget() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    @UiField
-    HTMLPanel container;
+  @UiField
+  HTMLPanel container;
 
-    @Override
-    public HasWidgets container() {
-        return container;
-    }
+  @Override
+  public HasWidgets container() {
+    return container;
+  }
 }

@@ -18,7 +18,7 @@ package com.facebook.tsdb.tsdash.client.event;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface KeyboardShortcutHandler extends EventHandler {
-    public void onCtrlSpace(KeyboardShortcutEvent event);
+  public void onCtrlSpace(KeyboardShortcutEvent event);
 
-    public void onCtrlF(KeyboardShortcutEvent event);
+  public void onCtrlF(KeyboardShortcutEvent event);
 }

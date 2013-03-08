@@ -17,22 +17,22 @@ package com.facebook.tsdb.tsdash.server.data.agg;
 
 public class MinAggregator implements Aggregator {
 
-    private double min = Double.MAX_VALUE;
+  private double min = Double.MAX_VALUE;
 
-    @Override
-    public void reset() {
-        min = Double.MAX_VALUE;
-    }
+  @Override
+  public void reset() {
+    min = Double.MAX_VALUE;
+  }
 
-    @Override
-    public void add(double value) {
-        if (value < min) {
-            min = value;
-        }
+  @Override
+  public void add(double value) {
+    if (value < min) {
+      min = value;
     }
+  }
 
-    @Override
-    public double getValue() {
-        return min;
-    }
+  @Override
+  public double getValue() {
+    return min;
+  }
 }

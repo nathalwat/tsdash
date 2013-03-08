@@ -34,63 +34,63 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ImagePlot extends Plot {
 
-    private String url = "";
+  private String url = "";
 
-    public ImagePlot(HandlerManager eventBus, HasWidgets container) {
-        super(eventBus, container);
-    }
+  public ImagePlot(HandlerManager eventBus, HasWidgets container) {
+    super(eventBus, container);
+  }
 
-    protected boolean surface = false;
-    protected boolean palette = false;
+  protected boolean surface = false;
+  protected boolean palette = false;
 
-    public void setOptions(boolean surface, boolean palette) {
-        this.surface = surface;
-        this.palette = palette;
-    }
+  public void setOptions(boolean surface, boolean palette) {
+    this.surface = surface;
+    this.palette = palette;
+  }
 
-    @Override
-    public void loadAndRender(TimeRange timeRange, ArrayList<Metric> metrics,
-            HTTPService service,
-            final AsyncCallback<ArrayList<MetricHeader>> callback,
-            final Command onRender) {
-        Widget w = (Widget) container;
-        int width = w.getOffsetWidth();
-        int height = w.getOffsetHeight();
-        service.loadPlot(timeRange, metrics, width, height, surface, palette,
-                new AsyncCallback<PlotResponse>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
+  @Override
+  public void loadAndRender(TimeRange timeRange, ArrayList<Metric> metrics,
+      HTTPService service,
+      final AsyncCallback<ArrayList<MetricHeader>> callback,
+      final Command onRender) {
+    Widget w = (Widget) container;
+    int width = w.getOffsetWidth();
+    int height = w.getOffsetHeight();
+    service.loadPlot(timeRange, metrics, width, height, surface, palette,
+        new AsyncCallback<PlotResponse>() {
+          @Override
+          public void onFailure(Throwable caught) {
+            callback.onFailure(caught);
+          }
 
-                    @Override
-                    public void onSuccess(final PlotResponse result) {
-                        eventBus.fireEvent(new LogEvent("Plot Load", ""
-                                + result));
-                        url = result.plotURL;
-                        onRender.execute();
-                        render(new Command() {
-                            @Override
-                            public void execute() {
-                                callback.onSuccess(result.metrics);
-                            }
-                        });
-                    }
-                });
-    }
-
-    @Override
-    public void render(final Command onRendered) {
-        final Image newImage = new Image(url);
-        newImage.addLoadHandler(new LoadHandler() {
-            @Override
-            public void onLoad(LoadEvent event) {
-                endRender(newImage);
-                newImage.setVisible(true);
-                onRendered.execute();
-            }
+          @Override
+          public void onSuccess(final PlotResponse result) {
+            eventBus.fireEvent(new LogEvent("Plot Load", ""
+                + result));
+            url = result.plotURL;
+            onRender.execute();
+            render(new Command() {
+              @Override
+              public void execute() {
+                callback.onSuccess(result.metrics);
+              }
+            });
+          }
         });
-        newImage.setVisible(false);
-        startRender(newImage);
-    }
+  }
+
+  @Override
+  public void render(final Command onRendered) {
+    final Image newImage = new Image(url);
+    newImage.addLoadHandler(new LoadHandler() {
+      @Override
+      public void onLoad(LoadEvent event) {
+        endRender(newImage);
+        newImage.setVisible(true);
+        onRendered.execute();
+      }
+    });
+    newImage.setVisible(false);
+    startRender(newImage);
+  }
 }

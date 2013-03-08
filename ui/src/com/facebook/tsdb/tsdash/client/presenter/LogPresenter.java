@@ -26,49 +26,49 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LogPresenter implements Presenter {
 
-    private static final int LIMIT = 20;
+  private static final int LIMIT = 20;
 
-    public interface LogWidget {
-        HasWidgets container();
-    }
+  public interface LogWidget {
+    HasWidgets container();
+  }
 
-    public interface LogEntryWidget {
-    }
+  public interface LogEntryWidget {
+  }
 
-    private final HandlerManager eventBus;
-    private final LogWidget widget;
+  private final HandlerManager eventBus;
+  private final LogWidget widget;
 
-    private final ArrayList<LogEntryWidget> entries =
-        new ArrayList<LogEntryWidget>();
+  private final ArrayList<LogEntryWidget> entries =
+    new ArrayList<LogEntryWidget>();
 
-    public LogPresenter(HandlerManager eventBus, LogWidget widget) {
-        this.eventBus = eventBus;
-        this.widget = widget;
-        listenLogEvents();
-    }
+  public LogPresenter(HandlerManager eventBus, LogWidget widget) {
+    this.eventBus = eventBus;
+    this.widget = widget;
+    listenLogEvents();
+  }
 
-    private void listenLogEvents() {
-        eventBus.addHandler(LogEvent.TYPE, new LogEventHandler() {
-            @Override
-            public void onLog(LogEvent event) {
-                if (entries.size() == LIMIT) {
-                    widget.container().remove((Widget) entries.get(0));
-                    entries.remove(0);
-                }
-                LogEntryWidget logEntryWidget =
-                    new com.facebook.tsdb.tsdash.client.ui.LogEntryWidget(
-                        event.getTitle(), event.getMessage());
-                widget.container().add((Widget) logEntryWidget);
-                entries.add(logEntryWidget);
-            }
-        });
-    }
+  private void listenLogEvents() {
+    eventBus.addHandler(LogEvent.TYPE, new LogEventHandler() {
+      @Override
+      public void onLog(LogEvent event) {
+        if (entries.size() == LIMIT) {
+          widget.container().remove((Widget) entries.get(0));
+          entries.remove(0);
+        }
+        LogEntryWidget logEntryWidget =
+          new com.facebook.tsdb.tsdash.client.ui.LogEntryWidget(
+            event.getTitle(), event.getMessage());
+        widget.container().add((Widget) logEntryWidget);
+        entries.add(logEntryWidget);
+      }
+    });
+  }
 
-    @Override
-    public void go(final HasWidgets container,
-            final ApplicationState appState) {
-        container.clear();
-        container.add((Widget) widget);
-    }
+  @Override
+  public void go(final HasWidgets container,
+      final ApplicationState appState) {
+    container.clear();
+    container.add((Widget) widget);
+  }
 
 }

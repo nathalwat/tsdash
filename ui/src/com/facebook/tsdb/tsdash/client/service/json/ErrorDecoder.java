@@ -21,14 +21,14 @@ import com.google.gwt.json.client.JSONParser;
 
 public class ErrorDecoder extends JSONDecoder<ServiceException> {
 
-    @Override
-    ServiceException decode(String jsonText) {
-        JSONObject errObj = JSONParser.parseStrict(jsonText).isObject();
-        String title = "";
-        if (errObj.get("error").isNull() == null) {
-            title = errObj.get("error").isString().stringValue();
-        }
-        String stackTrace = errObj.get("stacktrace").isString().stringValue();
-        return new ServiceException(title, stackTrace);
+  @Override
+  ServiceException decode(String jsonText) {
+    JSONObject errObj = JSONParser.parseStrict(jsonText).isObject();
+    String title = "";
+    if (errObj.get("error").isNull() == null) {
+      title = errObj.get("error").isString().stringValue();
     }
+    String stackTrace = errObj.get("stacktrace").isString().stringValue();
+    return new ServiceException(title, stackTrace);
+  }
 }

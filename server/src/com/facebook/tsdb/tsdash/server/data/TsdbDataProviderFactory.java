@@ -21,13 +21,13 @@ import com.facebook.tsdb.tsdash.server.data.hbase.HBaseDataProvider;
 
 public class TsdbDataProviderFactory {
 
-    public static TsdbDataProvider get() throws TsdbDataProviderException {
-        try {
-            HBaseDataProvider hbase = new HBaseDataProvider();
-            return hbase;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new TsdbDataProviderException("No data provider available");
-        }
+  public static TsdbDataProvider get() throws TsdbDataProviderException {
+    try {
+      HBaseDataProvider hbase = new HBaseDataProvider();
+      return hbase;
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new TsdbDataProviderException("No data provider available");
     }
+  }
 }

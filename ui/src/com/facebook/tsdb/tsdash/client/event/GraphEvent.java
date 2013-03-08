@@ -19,33 +19,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class GraphEvent extends GwtEvent<GraphEventHandler> {
 
-    public static final GwtEvent.Type<GraphEventHandler> TYPE =
-        new GwtEvent.Type<GraphEventHandler>();
+  public static final GwtEvent.Type<GraphEventHandler> TYPE =
+    new GwtEvent.Type<GraphEventHandler>();
 
-    public enum Action {
-        LOADING_DATA, START_RENDERING, LOADED;
+  public enum Action {
+    LOADING_DATA, START_RENDERING, LOADED;
+  }
+
+  private final Action action;
+
+  public GraphEvent(Action action) {
+    this.action = action;
+  }
+
+  @Override
+  public GwtEvent.Type<GraphEventHandler> getAssociatedType() {
+    return TYPE;
+  }
+
+  @Override
+  protected void dispatch(GraphEventHandler handler) {
+    if (action == Action.LOADING_DATA) {
+      handler.onLoadingData(this);
+    } else if (action == Action.START_RENDERING) {
+      handler.onStartRendering(this);
+    } else if (action == Action.LOADED) {
+      handler.onLoaded(this);
     }
-
-    private final Action action;
-
-    public GraphEvent(Action action) {
-        this.action = action;
-    }
-
-    @Override
-    public GwtEvent.Type<GraphEventHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(GraphEventHandler handler) {
-        if (action == Action.LOADING_DATA) {
-            handler.onLoadingData(this);
-        } else if (action == Action.START_RENDERING) {
-            handler.onStartRendering(this);
-        } else if (action == Action.LOADED) {
-            handler.onLoaded(this);
-        }
-    }
+  }
 
 }

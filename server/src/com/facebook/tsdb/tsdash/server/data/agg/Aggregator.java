@@ -17,13 +17,13 @@ package com.facebook.tsdb.tsdash.server.data.agg;
 
 public interface Aggregator {
 
-    public enum Type {
-        SUM, MIN, MAX, AVG;
-    }
+  public enum Type {
+    SUM, MIN, MAX, AVG;
+  }
 
-    void reset();
+  void reset();
 
-    void add(double value);
+  void add(double value);
 
-    double getValue();
+  double getValue();
 }

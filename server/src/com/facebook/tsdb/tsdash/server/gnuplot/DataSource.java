@@ -17,11 +17,11 @@ package com.facebook.tsdb.tsdash.server.gnuplot;
 
 public class DataSource {
 
-    public String dataFilename;
-    public String title;
+  public String dataFilename;
+  public String title;
 
-    public DataSource(String dataFilename, String title) {
-        this.dataFilename = dataFilename;
-        this.title = title;
-    }
+  public DataSource(String dataFilename, String title) {
+    this.dataFilename = dataFilename;
+    this.title = title;
+  }
 }

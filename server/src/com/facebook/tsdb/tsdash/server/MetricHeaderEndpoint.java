@@ -39,45 +39,45 @@ import com.facebook.tsdb.tsdash.server.model.MetricQuery;
  */
 public class MetricHeaderEndpoint extends TsdbServlet {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * GET params:
-     * "metric" - metric name
-     * "from" - start of the time range
-     * "to" - end of the time range
-     */
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        PrintWriter out = response.getWriter();
-        try {
-            // decode parameters
-            long ts = System.currentTimeMillis();
-            String jsonParams = request.getParameter("params");
-            if (jsonParams == null) {
-                throw new Exception("Parameters not specified");
-            }
-            JSONObject jsonParamsObj = (JSONObject) JSONValue.parse(jsonParams);
-            long tsFrom = (Long) jsonParamsObj.get("tsFrom");
-            long tsTo = (Long) jsonParamsObj.get("tsTo");
-            String metricName = (String) jsonParamsObj.get("metric");
-            HashMap<String, String> tags = MetricQuery
-                    .decodeTags((JSONObject) jsonParamsObj.get("tags"));
-            if (metricName == null) {
-                throw new Exception("Missing parameter");
-            }
-            TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
-            Metric metric = dataProvider.fetchMetricHeader(metricName, tsFrom,
-                    tsTo, tags);
-            out.println(metric.toJSONString());
-            long loadTime = System.currentTimeMillis() - ts;
-            logger.info("[Header] time frame: " + (tsTo - tsFrom) + "s, "
-                    + "metric: " + metricName + ", tags: " + tags + ", "
-                    + "load time: " + loadTime + "ms");
-        } catch (Exception e) {
-            out.println(getErrorResponse(e));
-        }
-        out.close();
+  /**
+   * GET params:
+   * "metric" - metric name
+   * "from" - start of the time range
+   * "to" - end of the time range
+   */
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    PrintWriter out = response.getWriter();
+    try {
+      // decode parameters
+      long ts = System.currentTimeMillis();
+      String jsonParams = request.getParameter("params");
+      if (jsonParams == null) {
+        throw new Exception("Parameters not specified");
+      }
+      JSONObject jsonParamsObj = (JSONObject) JSONValue.parse(jsonParams);
+      long tsFrom = (Long) jsonParamsObj.get("tsFrom");
+      long tsTo = (Long) jsonParamsObj.get("tsTo");
+      String metricName = (String) jsonParamsObj.get("metric");
+      HashMap<String, String> tags = MetricQuery
+          .decodeTags((JSONObject) jsonParamsObj.get("tags"));
+      if (metricName == null) {
+        throw new Exception("Missing parameter");
+      }
+      TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
+      Metric metric = dataProvider.fetchMetricHeader(metricName, tsFrom,
+          tsTo, tags);
+      out.println(metric.toJSONString());
+      long loadTime = System.currentTimeMillis() - ts;
+      logger.info("[Header] time frame: " + (tsTo - tsFrom) + "s, "
+          + "metric: " + metricName + ", tags: " + tags + ", "
+          + "load time: " + loadTime + "ms");
+    } catch (Exception e) {
+      out.println(getErrorResponse(e));
     }
+    out.close();
+  }
 }

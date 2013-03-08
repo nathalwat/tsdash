@@ -19,31 +19,31 @@ import com.facebook.tsdb.tsdash.client.service.ServiceException;
 
 public abstract class JSONDecoder<T> {
 
-    abstract T decode(String jsonText);
+  abstract T decode(String jsonText);
 
-    private static ErrorDecoder errorDecoder = new ErrorDecoder();
+  private static ErrorDecoder errorDecoder = new ErrorDecoder();
 
-    public T tryDecode(String jsonText) throws JSONParseException {
-        try {
-            return decode(jsonText);
-        } catch (Exception e) {
-            throw new JSONParseException(jsonText);
-        }
+  public T tryDecode(String jsonText) throws JSONParseException {
+    try {
+      return decode(jsonText);
+    } catch (Exception e) {
+      throw new JSONParseException(jsonText);
     }
+  }
 
-    public T tryDecodeFromService(String jsonText) throws JSONParseException,
-            ServiceException {
-        try {
-            return decode(jsonText);
-        } catch (Exception e) {
-            // we try to decode an error
-            ServiceException serviceException = null;
-            try {
-                serviceException = errorDecoder.decode(jsonText);
-            } catch (Exception errorException) {
-                throw new JSONParseException(jsonText);
-            }
-            throw serviceException;
-        }
+  public T tryDecodeFromService(String jsonText) throws JSONParseException,
+      ServiceException {
+    try {
+      return decode(jsonText);
+    } catch (Exception e) {
+      // we try to decode an error
+      ServiceException serviceException = null;
+      try {
+        serviceException = errorDecoder.decode(jsonText);
+      } catch (Exception errorException) {
+        throw new JSONParseException(jsonText);
+      }
+      throw serviceException;
     }
+  }
 }

@@ -38,69 +38,69 @@ import com.facebook.tsdb.tsdash.server.data.hbase.HBaseConnection;
 
 public class TsdbServlet extends HttpServlet {
 
-    protected static Logger logger = Logger
-            .getLogger("com.facebook.tsdb.services");
+  protected static Logger logger = Logger
+      .getLogger("com.facebook.tsdb.services");
 
-    private static final long serialVersionUID = 1L;
-    public static final String PROPERTIES_FILE = "conf/tsdash.properties";
-    public static final String LOG4J_PROPERTIES_FILE = "conf/log4j.properties";
+  private static final long serialVersionUID = 1L;
+  public static final String PROPERTIES_FILE = "conf/tsdash.properties";
+  public static final String LOG4J_PROPERTIES_FILE = "conf/log4j.properties";
 
-    public static final String URL_PATTERN_PARAM = "plot.tsdash.urlpattern";
-    public static final String DEFAULT_URL_PATTERN = "http://%h:%p/plots/%f";
-    public static final int DEFAULT_PLOT_PORT = 8090;
-    public static final String PLOTS_DIR_PARAM = "plot.tsdash.dir";
-    public static final String DEFAULT_PLOTS_DIR = "/tmp";
-    public static String plotsDir = DEFAULT_PLOTS_DIR;
-    private static String URLPattern = DEFAULT_URL_PATTERN;
-    private String hostname = null;
+  public static final String URL_PATTERN_PARAM = "plot.tsdash.urlpattern";
+  public static final String DEFAULT_URL_PATTERN = "http://%h:%p/plots/%f";
+  public static final int DEFAULT_PLOT_PORT = 8090;
+  public static final String PLOTS_DIR_PARAM = "plot.tsdash.dir";
+  public static final String DEFAULT_PLOTS_DIR = "/tmp";
+  public static String plotsDir = DEFAULT_PLOTS_DIR;
+  private static String URLPattern = DEFAULT_URL_PATTERN;
+  private String hostname = null;
 
-    private static void loadConfiguration() {
-        Properties tsdbConf = new Properties();
-        try {
-            PropertyConfigurator.configure(LOG4J_PROPERTIES_FILE);
-            tsdbConf.load(new FileInputStream(PROPERTIES_FILE));
-            HBaseConnection.configure(tsdbConf);
-            URLPattern = tsdbConf.getProperty(URL_PATTERN_PARAM,
-                    DEFAULT_URL_PATTERN);
-            logger.info("URL pattern: " + URLPattern);
-            plotsDir = tsdbConf.getProperty(PLOTS_DIR_PARAM, DEFAULT_PLOTS_DIR);
-            logger.info("Plots are being written to: " + plotsDir);
-        } catch (FileNotFoundException e) {
-            System.err.println("Cannot find " + PROPERTIES_FILE);
-        } catch (IOException e) {
-            System.err.println("Cannot read " + PROPERTIES_FILE);
-        }
+  private static void loadConfiguration() {
+    Properties tsdbConf = new Properties();
+    try {
+      PropertyConfigurator.configure(LOG4J_PROPERTIES_FILE);
+      tsdbConf.load(new FileInputStream(PROPERTIES_FILE));
+      HBaseConnection.configure(tsdbConf);
+      URLPattern = tsdbConf.getProperty(URL_PATTERN_PARAM,
+          DEFAULT_URL_PATTERN);
+      logger.info("URL pattern: " + URLPattern);
+      plotsDir = tsdbConf.getProperty(PLOTS_DIR_PARAM, DEFAULT_PLOTS_DIR);
+      logger.info("Plots are being written to: " + plotsDir);
+    } catch (FileNotFoundException e) {
+      System.err.println("Cannot find " + PROPERTIES_FILE);
+    } catch (IOException e) {
+      System.err.println("Cannot read " + PROPERTIES_FILE);
     }
+  }
 
-    static {
-        loadConfiguration();
-    }
+  static {
+    loadConfiguration();
+  }
 
-    protected String generatePlotURL(String filenamePath)
-            throws UnknownHostException {
-        File plot = new File(filenamePath);
-        if (hostname == null) {
-            hostname = InetAddress.getLocalHost().getHostName();
-        }
-        String URL = URLPattern.replace("%h", hostname);
-        URL = URL.replace("%p", "" + DEFAULT_PLOT_PORT);
-        URL = URL.replace("%f", plot.getName());
-        return URL;
+  protected String generatePlotURL(String filenamePath)
+      throws UnknownHostException {
+    File plot = new File(filenamePath);
+    if (hostname == null) {
+      hostname = InetAddress.getLocalHost().getHostName();
     }
+    String URL = URLPattern.replace("%h", hostname);
+    URL = URL.replace("%p", "" + DEFAULT_PLOT_PORT);
+    URL = URL.replace("%f", plot.getName());
+    return URL;
+  }
 
-    @SuppressWarnings("unchecked")
-    protected String getErrorResponse(Throwable e) {
-        JSONObject errObj = new JSONObject();
-        errObj.put("error", e.getMessage());
-        StringWriter stackTrace = new StringWriter();
-        e.printStackTrace(new PrintWriter(stackTrace));
-        errObj.put("stacktrace", stackTrace.toString());
-        return errObj.toJSONString();
-    }
+  @SuppressWarnings("unchecked")
+  protected String getErrorResponse(Throwable e) {
+    JSONObject errObj = new JSONObject();
+    errObj.put("error", e.getMessage());
+    StringWriter stackTrace = new StringWriter();
+    e.printStackTrace(new PrintWriter(stackTrace));
+    errObj.put("stacktrace", stackTrace.toString());
+    return errObj.toJSONString();
+  }
 
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-    }
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+  }
 }

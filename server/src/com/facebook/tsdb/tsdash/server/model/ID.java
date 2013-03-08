@@ -22,39 +22,39 @@ import com.google.common.primitives.UnsignedBytes;
 
 public class ID implements Comparable<ID> {
 
-    public static final int BYTES = 3;
-    private static final byte[] null_id = { 0, 0, 0 };
-    public static final ID NULL_ID = new ID(null_id);
+  public static final int BYTES = 3;
+  private static final byte[] null_id = { 0, 0, 0 };
+  public static final ID NULL_ID = new ID(null_id);
 
-    public byte[] id;
+  public byte[] id;
 
-    public ID(byte[] id) {
-        this.id = id;
-    }
+  public ID(byte[] id) {
+    this.id = id;
+  }
 
-    @Override
-    public int compareTo(ID other) {
-        int ret = UnsignedBytes.lexicographicalComparator().compare(id,
-                other.id);
-        return ret;
-    }
+  @Override
+  public int compareTo(ID other) {
+    int ret = UnsignedBytes.lexicographicalComparator().compare(id,
+        other.id);
+    return ret;
+  }
 
-    public boolean isNull() {
-        return this == NULL_ID || this.compareTo(NULL_ID) == 0;
-    }
+  public boolean isNull() {
+    return this == NULL_ID || this.compareTo(NULL_ID) == 0;
+  }
 
-    @Override
-    public String toString() {
-        return UnsignedBytes.join(".", id);
-    }
+  @Override
+  public String toString() {
+    return UnsignedBytes.join(".", id);
+  }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(id);
-    }
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(id);
+  }
 
-    public String toHexString() {
-        return Pattern.quote(new String(id));
-    }
+  public String toHexString() {
+    return Pattern.quote(new String(id));
+  }
 
 }

@@ -19,9 +19,9 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface AutoReloadEventHandler extends EventHandler {
 
-    public void onEnable(AutoReloadEvent event);
+  public void onEnable(AutoReloadEvent event);
 
-    public void onPeriodChange(AutoReloadEvent event);
+  public void onPeriodChange(AutoReloadEvent event);
 
-    public void onLaunch(AutoReloadEvent event);
+  public void onLaunch(AutoReloadEvent event);
 }

@@ -20,40 +20,40 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class MetricEvent extends GwtEvent<MetricEventHandler> {
 
-    public static final GwtEvent.Type<MetricEventHandler> TYPE =
-        new GwtEvent.Type<MetricEventHandler>();
+  public static final GwtEvent.Type<MetricEventHandler> TYPE =
+    new GwtEvent.Type<MetricEventHandler>();
 
-    public enum Operation {
-        ADD, DELETE, AGGREGATE, PARAM_TOGGLE;
+  public enum Operation {
+    ADD, DELETE, AGGREGATE, PARAM_TOGGLE;
+  }
+
+  private final Operation op;
+  private final Metric metric;
+
+  public MetricEvent(Operation op, Metric metric) {
+    this.op = op;
+    this.metric = metric;
+  }
+
+  public Metric getMetric() {
+    return metric;
+  }
+
+  @Override
+  public GwtEvent.Type<MetricEventHandler> getAssociatedType() {
+    return TYPE;
+  }
+
+  @Override
+  protected void dispatch(MetricEventHandler handler) {
+    if (op == Operation.ADD) {
+      handler.onAdd(this);
+    } else if (op == Operation.DELETE) {
+      handler.onDelete(this);
+    } else if (op == Operation.PARAM_TOGGLE) {
+      handler.onToggle(this);
+    } else if (op == Operation.AGGREGATE) {
+      handler.onAggregatorChange(this);
     }
-
-    private final Operation op;
-    private final Metric metric;
-
-    public MetricEvent(Operation op, Metric metric) {
-        this.op = op;
-        this.metric = metric;
-    }
-
-    public Metric getMetric() {
-        return metric;
-    }
-
-    @Override
-    public GwtEvent.Type<MetricEventHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(MetricEventHandler handler) {
-        if (op == Operation.ADD) {
-            handler.onAdd(this);
-        } else if (op == Operation.DELETE) {
-            handler.onDelete(this);
-        } else if (op == Operation.PARAM_TOGGLE) {
-            handler.onToggle(this);
-        } else if (op == Operation.AGGREGATE) {
-            handler.onAggregatorChange(this);
-        }
-    }
+  }
 }

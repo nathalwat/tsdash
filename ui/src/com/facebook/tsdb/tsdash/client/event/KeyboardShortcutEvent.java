@@ -19,31 +19,31 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class KeyboardShortcutEvent extends GwtEvent<KeyboardShortcutHandler> {
 
-    public static final GwtEvent.Type<KeyboardShortcutHandler> TYPE =
-        new GwtEvent.Type<KeyboardShortcutHandler>();
+  public static final GwtEvent.Type<KeyboardShortcutHandler> TYPE =
+    new GwtEvent.Type<KeyboardShortcutHandler>();
 
-    public enum Shortcut {
-        CTRL_SPACE, CTRL_F;
+  public enum Shortcut {
+    CTRL_SPACE, CTRL_F;
+  }
+
+  private final Shortcut shortcut;
+
+  public KeyboardShortcutEvent(Shortcut shortcut) {
+    this.shortcut = shortcut;
+  }
+
+  @Override
+  public GwtEvent.Type<KeyboardShortcutHandler> getAssociatedType() {
+    return TYPE;
+  }
+
+  @Override
+  protected void dispatch(KeyboardShortcutHandler handler) {
+    if (shortcut.equals(Shortcut.CTRL_SPACE)) {
+      handler.onCtrlSpace(this);
+    } else if (shortcut.equals(Shortcut.CTRL_F)) {
+      handler.onCtrlF(this);
     }
-
-    private final Shortcut shortcut;
-
-    public KeyboardShortcutEvent(Shortcut shortcut) {
-        this.shortcut = shortcut;
-    }
-
-    @Override
-    public GwtEvent.Type<KeyboardShortcutHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(KeyboardShortcutHandler handler) {
-        if (shortcut.equals(Shortcut.CTRL_SPACE)) {
-            handler.onCtrlSpace(this);
-        } else if (shortcut.equals(Shortcut.CTRL_F)) {
-            handler.onCtrlF(this);
-        }
-    }
+  }
 
 }

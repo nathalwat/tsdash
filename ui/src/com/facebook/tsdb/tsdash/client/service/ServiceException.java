@@ -17,15 +17,15 @@ package com.facebook.tsdb.tsdash.client.service;
 
 public class ServiceException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-    private final String serverStackTrace;
+  private static final long serialVersionUID = 1L;
+  private final String serverStackTrace;
 
-    public ServiceException(String title, String serverStackTrace) {
-        super(title);
-        this.serverStackTrace = serverStackTrace;
-    }
+  public ServiceException(String title, String serverStackTrace) {
+    super(title);
+    this.serverStackTrace = serverStackTrace;
+  }
 
-    public String getServerStackTrace() {
-        return serverStackTrace;
-    }
+  public String getServerStackTrace() {
+    return serverStackTrace;
+  }
 }

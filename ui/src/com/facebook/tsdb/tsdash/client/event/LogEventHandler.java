@@ -19,5 +19,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface LogEventHandler extends EventHandler {
 
-    void onLog(LogEvent event);
+  void onLog(LogEvent event);
 }

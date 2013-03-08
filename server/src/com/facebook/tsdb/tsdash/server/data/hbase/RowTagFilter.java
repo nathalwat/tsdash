@@ -31,76 +31,76 @@ import com.facebook.tsdb.tsdash.server.model.Tag;
 
 public class RowTagFilter {
 
-    protected static Logger logger = Logger
-            .getLogger("com.facebook.tsdb.services");
+  protected static Logger logger = Logger
+      .getLogger("com.facebook.tsdb.services");
 
-    private final Tag[] tags;
+  private final Tag[] tags;
 
-    public RowTagFilter(Tag[] tags) {
-        this.tags = tags;
+  public RowTagFilter(Tag[] tags) {
+    this.tags = tags;
+  }
+
+  public RowTagFilter(Map<String, String> tags, IDMap idMap) {
+    ArrayList<Tag> tagsList = new ArrayList<Tag>();
+    for (String tag : tags.keySet()) {
+      try {
+        ID tagID = idMap.getTagID(tag);
+        ID tagValueID = idMap.getTagValueID(tags.get(tag));
+        tagsList.add(new Tag(tagID, tagValueID, idMap));
+      } catch (Exception e) {
+        e.printStackTrace();
+        continue;
+      }
     }
+    Collections.sort(tagsList, Tag.keyComparator());
+    this.tags = tagsList.toArray(new Tag[0]);
+  }
 
-    public RowTagFilter(Map<String, String> tags, IDMap idMap) {
-        ArrayList<Tag> tagsList = new ArrayList<Tag>();
-        for (String tag : tags.keySet()) {
-            try {
-                ID tagID = idMap.getTagID(tag);
-                ID tagValueID = idMap.getTagValueID(tags.get(tag));
-                tagsList.add(new Tag(tagID, tagValueID, idMap));
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
+  /**
+   * decide if we filter the row or not
+   *
+   * @param timeSeries
+   * @return true if we have to filter it false if we can accept it
+   */
+  public boolean filterRow(Tag[] rowTags) {
+    // all filter tags must exist in the row tag list
+    for (Tag tag : tags) {
+      boolean found = false;
+      // we can just iterate over the row tags, as there are just a few
+      for (Tag rowTag : rowTags) {
+        if (Tag.keyValueComparator().compare(tag, rowTag) == 0) {
+          found = true;
+          break;
         }
-        Collections.sort(tagsList, Tag.keyComparator());
-        this.tags = tagsList.toArray(new Tag[0]);
+      }
+      if (!found) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    /**
-     * decide if we filter the row or not
-     *
-     * @param timeSeries
-     * @return true if we have to filter it false if we can accept it
-     */
-    public boolean filterRow(Tag[] rowTags) {
-        // all filter tags must exist in the row tag list
-        for (Tag tag : tags) {
-            boolean found = false;
-            // we can just iterate over the row tags, as there are just a few
-            for (Tag rowTag : rowTags) {
-                if (Tag.keyValueComparator().compare(tag, rowTag) == 0) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                return true;
-            }
-        }
-        return false;
+  /**
+   * generate the RowFilter used for filter rows remotely, in the RegionServer
+   *
+   * @return
+   */
+  public Filter getRemoteFilter() {
+    FilterList filterList = new FilterList();
+    for (Tag tag : tags) {
+      filterList.addFilter(new RowFilter(CompareFilter.CompareOp.EQUAL,
+          new RegexStringComparator(tag.toHexString())));
     }
+    return filterList;
+  }
 
-    /**
-     * generate the RowFilter used for filter rows remotely, in the RegionServer
-     *
-     * @return
-     */
-    public Filter getRemoteFilter() {
-        FilterList filterList = new FilterList();
-        for (Tag tag : tags) {
-            filterList.addFilter(new RowFilter(CompareFilter.CompareOp.EQUAL,
-                    new RegexStringComparator(tag.toHexString())));
-        }
-        return filterList;
+  @Override
+  public String toString() {
+    String ret = "";
+    for (Tag tag : tags) {
+      ret += tag + "\n";
     }
-
-    @Override
-    public String toString() {
-        String ret = "";
-        for (Tag tag : tags) {
-            ret += tag + "\n";
-        }
-        return ret;
-    }
+    return ret;
+  }
 
 }

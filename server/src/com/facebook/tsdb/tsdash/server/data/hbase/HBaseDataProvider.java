@@ -34,150 +34,150 @@ import com.facebook.tsdb.tsdash.server.model.TagsArray;
 
 public class HBaseDataProvider implements TsdbDataProvider {
 
-    protected static Logger logger = Logger
-            .getLogger("com.facebook.tsdb.services");
+  protected static Logger logger = Logger
+      .getLogger("com.facebook.tsdb.services");
 
-    public static final String ID_FAMILY = "id";
-    public static final String NAME_FAMILY = "name";
-    public static final String DATAPOINT_FAMILY = "t";
+  public static final String ID_FAMILY = "id";
+  public static final String NAME_FAMILY = "name";
+  public static final String DATAPOINT_FAMILY = "t";
 
-    public static final String METRIC_QUALIFIER = "metrics";
-    public static final String TAG_QUALIFIER = "tagk";
-    public static final String TAG_VALUE_QUALIFIER = "tagv";
+  public static final String METRIC_QUALIFIER = "metrics";
+  public static final String TAG_QUALIFIER = "tagk";
+  public static final String TAG_VALUE_QUALIFIER = "tagv";
 
-    private final HTable dataTable;
-    private final IDMap idMap = new IDMap();
+  private final HTable dataTable;
+  private final IDMap idMap = new IDMap();
 
-    public HBaseDataProvider() throws IOException {
-        dataTable = HBaseConnection.getDataTableConn();
+  public HBaseDataProvider() throws IOException {
+    dataTable = HBaseConnection.getDataTableConn();
+  }
+
+  private void pickDataPoints(ArrayList<DataPoint> dataPoints,
+      RowRange rowRange, byte[] rowKey, Map<byte[], byte[]> cells) {
+    boolean first = Bytes.startsWith(rowKey, rowRange.getStart());
+    boolean last = Bytes.startsWith(rowKey, rowRange.getLast());
+    long baseTs = RowKey.baseTsFromRowKey(rowKey);
+    // skipping the points outside our time range
+    for (byte[] key : cells.keySet()) {
+      long offset = DataPointQualifier.offsetFromQualifier(key);
+      if (first && offset < rowRange.getStartOffset()) {
+        continue;
+      }
+      if (last && offset > rowRange.getLastOffset()) {
+        continue;
+      }
+      DataPoint dataPoint = new DataPoint(baseTs + offset,
+          DataPoint.decodeValue(cells.get(key), key));
+      dataPoints.add(dataPoint);
     }
+  }
 
-    private void pickDataPoints(ArrayList<DataPoint> dataPoints,
-            RowRange rowRange, byte[] rowKey, Map<byte[], byte[]> cells) {
-        boolean first = Bytes.startsWith(rowKey, rowRange.getStart());
-        boolean last = Bytes.startsWith(rowKey, rowRange.getLast());
-        long baseTs = RowKey.baseTsFromRowKey(rowKey);
-        // skipping the points outside our time range
-        for (byte[] key : cells.keySet()) {
-            long offset = DataPointQualifier.offsetFromQualifier(key);
-            if (first && offset < rowRange.getStartOffset()) {
-                continue;
-            }
-            if (last && offset > rowRange.getLastOffset()) {
-                continue;
-            }
-            DataPoint dataPoint = new DataPoint(baseTs + offset,
-                    DataPoint.decodeValue(cells.get(key), key));
-            dataPoints.add(dataPoint);
-        }
+  private ID[] getTagIDs(String[] tags) {
+    ArrayList<ID> tagsIDs = new ArrayList<ID>();
+    for (String tag : tags) {
+      try {
+        ID tagID = idMap.getTagID(tag);
+        tagsIDs.add(tagID);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
+    return tagsIDs.toArray(new ID[0]);
+  }
 
-    private ID[] getTagIDs(String[] tags) {
-        ArrayList<ID> tagsIDs = new ArrayList<ID>();
-        for (String tag : tags) {
-            try {
-                ID tagID = idMap.getTagID(tag);
-                tagsIDs.add(tagID);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return tagsIDs.toArray(new ID[0]);
+  @Override
+  public Metric fetchMetric(String metric, long startTs, long toTs,
+      Map<String, String> tags, String[] tagOrders) throws Exception {
+    ID metricID = idMap.getMetricID(metric);
+    Metric metricData = new Metric(metricID.id, metric, idMap);
+    RowRange rowRange = new RowRange(metricID.id, startTs, toTs);
+    RowTagFilter tagFilter = new RowTagFilter(tags, idMap);
+    ID[] tagsPrio = getTagIDs(tagOrders);
+
+    Scan scan = new Scan(rowRange.getStart(), rowRange.getStop());
+    if (tags.size() > 0) {
+      scan.setFilter(tagFilter.getRemoteFilter());
     }
-
-    @Override
-    public Metric fetchMetric(String metric, long startTs, long toTs,
-            Map<String, String> tags, String[] tagOrders) throws Exception {
-        ID metricID = idMap.getMetricID(metric);
-        Metric metricData = new Metric(metricID.id, metric, idMap);
-        RowRange rowRange = new RowRange(metricID.id, startTs, toTs);
-        RowTagFilter tagFilter = new RowTagFilter(tags, idMap);
-        ID[] tagsPrio = getTagIDs(tagOrders);
-
-        Scan scan = new Scan(rowRange.getStart(), rowRange.getStop());
-        if (tags.size() > 0) {
-            scan.setFilter(tagFilter.getRemoteFilter());
-        }
-        ResultScanner scanner = dataTable.getScanner(scan);
-        int count = 0;
-        int falsePositives = 0;
-        // rows are in lexicographic order, which means there are already
-        // ordered by time
-        for (Result result : scanner) {
-            RowKey rowKey = new RowKey(result.getRow(), idMap);
-            TagsArray rowTags = rowKey.getTags(tagsPrio);
-            if (tagFilter.filterRow(rowTags.asArray())) {
-                falsePositives++;
-            } else {
-                pickDataPoints(metricData.getDataPoints(rowTags), rowRange,
-                        rowKey.getKey(),
-                        result.getFamilyMap(DATAPOINT_FAMILY.getBytes()));
-            }
-            count++;
-        }
-        logger.info(metric + ": " + count + " rows scanned, " + falsePositives
-                + " false positives found");
-        return metricData;
+    ResultScanner scanner = dataTable.getScanner(scan);
+    int count = 0;
+    int falsePositives = 0;
+    // rows are in lexicographic order, which means there are already
+    // ordered by time
+    for (Result result : scanner) {
+      RowKey rowKey = new RowKey(result.getRow(), idMap);
+      TagsArray rowTags = rowKey.getTags(tagsPrio);
+      if (tagFilter.filterRow(rowTags.asArray())) {
+        falsePositives++;
+      } else {
+        pickDataPoints(metricData.getDataPoints(rowTags), rowRange,
+            rowKey.getKey(),
+            result.getFamilyMap(DATAPOINT_FAMILY.getBytes()));
+      }
+      count++;
     }
+    logger.info(metric + ": " + count + " rows scanned, " + falsePositives
+        + " false positives found");
+    return metricData;
+  }
 
-    @Override
-    public Metric fetchMetricHeader(String metric, long startTs, long toTs,
-            Map<String, String> tags) throws Exception {
-        ID metricID = idMap.getMetricID(metric);
-        Metric metricData = new Metric(metricID.id, metric, idMap);
-        RowRange rowRange = new RowRange(metricID.id, startTs, toTs);
-        RowTagFilter tagFilter = new RowTagFilter(tags, idMap);
+  @Override
+  public Metric fetchMetricHeader(String metric, long startTs, long toTs,
+      Map<String, String> tags) throws Exception {
+    ID metricID = idMap.getMetricID(metric);
+    Metric metricData = new Metric(metricID.id, metric, idMap);
+    RowRange rowRange = new RowRange(metricID.id, startTs, toTs);
+    RowTagFilter tagFilter = new RowTagFilter(tags, idMap);
 
-        Scan scan = new Scan(rowRange.getStart(), rowRange.getStop());
-        if (tags.size() > 0) {
-            scan.setFilter(tagFilter.getRemoteFilter());
-        }
-        ResultScanner scanner = dataTable.getScanner(scan);
-        int count = 0;
-        int falsePositives = 0;
-        for (Result result : scanner) {
-            RowKey rowKey = new RowKey(result.getRow(), idMap);
-            TagsArray rowTags = rowKey.getTags(TagsArray.NATURAL_ORDER);
-            if (tagFilter.filterRow(rowTags.asArray())) {
-                falsePositives++;
-            } else if (!metricData.timeSeries.containsKey(rowTags)) {
-                metricData.timeSeries.put(rowTags, new ArrayList<DataPoint>());
-            }
-            count++;
-        }
-        logger.info("Fetching header for " + metric + ": " + count + " rows, "
-                + falsePositives + " false positives");
-        return metricData;
+    Scan scan = new Scan(rowRange.getStart(), rowRange.getStop());
+    if (tags.size() > 0) {
+      scan.setFilter(tagFilter.getRemoteFilter());
     }
-
-    @Override
-    public String[] getMetrics() throws Exception {
-        return idMap.getMetrics();
+    ResultScanner scanner = dataTable.getScanner(scan);
+    int count = 0;
+    int falsePositives = 0;
+    for (Result result : scanner) {
+      RowKey rowKey = new RowKey(result.getRow(), idMap);
+      TagsArray rowTags = rowKey.getTags(TagsArray.NATURAL_ORDER);
+      if (tagFilter.filterRow(rowTags.asArray())) {
+        falsePositives++;
+      } else if (!metricData.timeSeries.containsKey(rowTags)) {
+        metricData.timeSeries.put(rowTags, new ArrayList<DataPoint>());
+      }
+      count++;
     }
+    logger.info("Fetching header for " + metric + ": " + count + " rows, "
+        + falsePositives + " false positives");
+    return metricData;
+  }
 
-    @Override
-    public String[] getTags(String metric) throws Exception {
-        return idMap.getTags();
-    }
+  @Override
+  public String[] getMetrics() throws Exception {
+    return idMap.getMetrics();
+  }
 
-    @Override
-    public String[] getTagValues(String tag) throws Exception {
-        return idMap.getTagValues();
-    }
+  @Override
+  public String[] getTags(String metric) throws Exception {
+    return idMap.getTags();
+  }
 
-    @Override
-    public byte[] getMetricID(String metric) throws Exception {
-        return idMap.getMetricID(metric).id;
-    }
+  @Override
+  public String[] getTagValues(String tag) throws Exception {
+    return idMap.getTagValues();
+  }
 
-    @Override
-    public byte[] getTagID(String tag) throws Exception {
-        return idMap.getTagID(tag).id;
-    }
+  @Override
+  public byte[] getMetricID(String metric) throws Exception {
+    return idMap.getMetricID(metric).id;
+  }
 
-    @Override
-    public byte[] getTagValueID(String tagValue) throws Exception {
-        return idMap.getTagValueID(tagValue).id;
-    }
+  @Override
+  public byte[] getTagID(String tag) throws Exception {
+    return idMap.getTagID(tag).id;
+  }
+
+  @Override
+  public byte[] getTagValueID(String tagValue) throws Exception {
+    return idMap.getTagValueID(tagValue).id;
+  }
 
 }

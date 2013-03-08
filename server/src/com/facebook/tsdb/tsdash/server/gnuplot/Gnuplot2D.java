@@ -27,74 +27,74 @@ import com.facebook.tsdb.tsdash.server.model.TagsArray;
 
 public class Gnuplot2D extends GnuplotProcess {
 
-    public Gnuplot2D() throws Exception {
-        super();
-    }
+  public Gnuplot2D() throws Exception {
+    super();
+  }
 
-    private void write2DTimeSeries(ArrayList<DataPoint> dataPoints,
-            String dataPipe) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(dataPipe)));
-        for (DataPoint point : dataPoints) {
-            writer.write(String.format("%d %.2f\n", point.ts, point.value));
-        }
-        writer.close();
+  private void write2DTimeSeries(ArrayList<DataPoint> dataPoints,
+      String dataPipe) throws IOException {
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(dataPipe)));
+    for (DataPoint point : dataPoints) {
+      writer.write(String.format("%d %.2f\n", point.ts, point.value));
     }
+    writer.close();
+  }
 
-    private String renderLineTitle(Metric metric, TagsArray rowTags) {
-        String suffix = metric.isRate() ? " /s" : "";
-        return metric.getName() + "{" + rowTags.getTitle() + "}" + suffix;
-    }
+  private String renderLineTitle(Metric metric, TagsArray rowTags) {
+    String suffix = metric.isRate() ? " /s" : "";
+    return metric.getName() + "{" + rowTags.getTitle() + "}" + suffix;
+  }
 
-    @Override
-    public String plot(Metric[] metrics, GnuplotOptions options)
-            throws Exception {
-        int count = 0;
-        int rates = 0;
-        for (Metric metric : metrics) {
-            for (ArrayList<DataPoint> dataPoints : metric.timeSeries.values()) {
-                if (dataPoints.size() > 0) {
-                    count++;
-                }
-            }
-            if (metric.isRate()) {
-                rates++;
-            }
+  @Override
+  public String plot(Metric[] metrics, GnuplotOptions options)
+      throws Exception {
+    int count = 0;
+    int rates = 0;
+    for (Metric metric : metrics) {
+      for (ArrayList<DataPoint> dataPoints : metric.timeSeries.values()) {
+        if (dataPoints.size() > 0) {
+          count++;
         }
-        if (count == 0) {
-            return noDataFilename();
-        }
-        // we enable rate display (/s) on the y axis
-        if (count == rates) {
-            options.setDisplayRate(true);
-        }
-        createPipes(count);
-        options.clearDataSources();
-        int i = 0;
-        for (Metric metric : metrics) {
-            for (TagsArray rowTags : metric.timeSeries.keySet()) {
-                if (metric.timeSeries.get(rowTags).size() > 0) {
-                    options.addDataSource(new DataSource(getPipeFilename(i),
-                           renderLineTitle(metric, rowTags)));
-                    i++;
-                }
-            }
-        }
-        String outputFilename = getOutputFilename(options);
-        options.setOutput(outputFilename);
-        gnuplotStdin.write(options.toScript());
-        gnuplotStdin.close();
-        i = 0;
-        for (Metric metric : metrics) {
-            for (TagsArray rowTags : metric.timeSeries.keySet()) {
-                ArrayList<DataPoint> dataPoints = metric.timeSeries
-                        .get(rowTags);
-                if (dataPoints.size() > 0) {
-                    write2DTimeSeries(dataPoints, getPipeFilename(i));
-                    i++;
-                }
-            }
-        }
-        return outputFilename;
+      }
+      if (metric.isRate()) {
+        rates++;
+      }
     }
+    if (count == 0) {
+      return noDataFilename();
+    }
+    // we enable rate display (/s) on the y axis
+    if (count == rates) {
+      options.setDisplayRate(true);
+    }
+    createPipes(count);
+    options.clearDataSources();
+    int i = 0;
+    for (Metric metric : metrics) {
+      for (TagsArray rowTags : metric.timeSeries.keySet()) {
+        if (metric.timeSeries.get(rowTags).size() > 0) {
+          options.addDataSource(new DataSource(getPipeFilename(i),
+               renderLineTitle(metric, rowTags)));
+          i++;
+        }
+      }
+    }
+    String outputFilename = getOutputFilename(options);
+    options.setOutput(outputFilename);
+    gnuplotStdin.write(options.toScript());
+    gnuplotStdin.close();
+    i = 0;
+    for (Metric metric : metrics) {
+      for (TagsArray rowTags : metric.timeSeries.keySet()) {
+        ArrayList<DataPoint> dataPoints = metric.timeSeries
+            .get(rowTags);
+        if (dataPoints.size() > 0) {
+          write2DTimeSeries(dataPoints, getPipeFilename(i));
+          i++;
+        }
+      }
+    }
+    return outputFilename;
+  }
 }

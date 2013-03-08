@@ -19,5 +19,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ErrorEventHandler extends EventHandler {
 
-    public void onError(ErrorEvent event);
+  public void onError(ErrorEvent event);
 }

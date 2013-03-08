@@ -17,15 +17,15 @@ package com.facebook.tsdb.tsdash.client.service.json;
 
 public class JSONParseException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-    private final String incorrectJSONText;
+  private static final long serialVersionUID = 1L;
+  private final String incorrectJSONText;
 
-    public JSONParseException(String JSONText) {
-        super("Unable to parse the given JSON");
-        this.incorrectJSONText = JSONText;
-    }
+  public JSONParseException(String JSONText) {
+    super("Unable to parse the given JSON");
+    this.incorrectJSONText = JSONText;
+  }
 
-    public String getIncorrectJSONText() {
-        return incorrectJSONText;
-    }
+  public String getIncorrectJSONText() {
+    return incorrectJSONText;
+  }
 }

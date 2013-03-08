@@ -21,32 +21,32 @@ import com.facebook.tsdb.tsdash.server.model.DataPoint;
 
 public class TimeSeries {
 
-    public static ArrayList<Long> merge(ArrayList<Long> timeSeries,
-            ArrayList<DataPoint> dataPoints) {
-        ArrayList<Long> result = new ArrayList<Long>();
-        int i = 0;
-        int j = 0;
-        while (i < timeSeries.size() && j < dataPoints.size()) {
-            long cmp = timeSeries.get(i) - dataPoints.get(j).ts;
-            if (cmp < 0) {
-                result.add(timeSeries.get(i));
-                i++;
-            } else if (cmp > 0) {
-                result.add(dataPoints.get(j).ts);
-                j++;
-            } else {
-                result.add(timeSeries.get(i));
-                i++;
-                j++;
-            }
-        }
-        for (; i < timeSeries.size(); i++) {
-            result.add(timeSeries.get(i));
-        }
-        for (; j < dataPoints.size(); j++) {
-            result.add(dataPoints.get(j).ts);
-        }
-        return result;
+  public static ArrayList<Long> merge(ArrayList<Long> timeSeries,
+      ArrayList<DataPoint> dataPoints) {
+    ArrayList<Long> result = new ArrayList<Long>();
+    int i = 0;
+    int j = 0;
+    while (i < timeSeries.size() && j < dataPoints.size()) {
+      long cmp = timeSeries.get(i) - dataPoints.get(j).ts;
+      if (cmp < 0) {
+        result.add(timeSeries.get(i));
+        i++;
+      } else if (cmp > 0) {
+        result.add(dataPoints.get(j).ts);
+        j++;
+      } else {
+        result.add(timeSeries.get(i));
+        i++;
+        j++;
+      }
     }
+    for (; i < timeSeries.size(); i++) {
+      result.add(timeSeries.get(i));
+    }
+    for (; j < dataPoints.size(); j++) {
+      result.add(dataPoints.get(j).ts);
+    }
+    return result;
+  }
 
 }

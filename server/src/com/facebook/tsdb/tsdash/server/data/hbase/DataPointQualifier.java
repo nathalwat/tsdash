@@ -17,29 +17,29 @@ package com.facebook.tsdb.tsdash.server.data.hbase;
 
 public class DataPointQualifier {
 
-    private static final int QUALIFIER_BYTES = 2;
-    private static final int QUALIFIER_FLAGS_BITS = 4;
+  private static final int QUALIFIER_BYTES = 2;
+  private static final int QUALIFIER_FLAGS_BITS = 4;
 
-    public static byte[] packedOffset(long offset) {
-        byte[] packed = new byte[QUALIFIER_BYTES];
-        offset = offset << QUALIFIER_FLAGS_BITS;
-        long shift = 0;
-        for (int i = QUALIFIER_BYTES - 1; i >= 0; i--) {
-            packed[i] = (byte) ((offset >> shift) & 0xFF);
-            shift += 8;
-        }
-        return packed;
+  public static byte[] packedOffset(long offset) {
+    byte[] packed = new byte[QUALIFIER_BYTES];
+    offset = offset << QUALIFIER_FLAGS_BITS;
+    long shift = 0;
+    for (int i = QUALIFIER_BYTES - 1; i >= 0; i--) {
+      packed[i] = (byte) ((offset >> shift) & 0xFF);
+      shift += 8;
     }
+    return packed;
+  }
 
-    public static int offsetFromQualifier(byte[] qualifier) {
-        int offset = 0;
-        for (int i = 0; i < QUALIFIER_BYTES; i++) {
-            offset = (offset << i * 8) | (qualifier[i] & 0xFF);
-        }
-        return offset >> QUALIFIER_FLAGS_BITS;
+  public static int offsetFromQualifier(byte[] qualifier) {
+    int offset = 0;
+    for (int i = 0; i < QUALIFIER_BYTES; i++) {
+      offset = (offset << i * 8) | (qualifier[i] & 0xFF);
     }
+    return offset >> QUALIFIER_FLAGS_BITS;
+  }
 
-    public static boolean isFloat(byte[] qualifier) {
-        return (qualifier[QUALIFIER_BYTES - 1] & 0x08) != 0;
-    }
+  public static boolean isFloat(byte[] qualifier) {
+    return (qualifier[QUALIFIER_BYTES - 1] & 0x08) != 0;
+  }
 }

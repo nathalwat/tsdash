@@ -19,26 +19,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ErrorEvent extends GwtEvent<ErrorEventHandler> {
 
-    public static final GwtEvent.Type<ErrorEventHandler> TYPE =
-        new GwtEvent.Type<ErrorEventHandler>();
+  public static final GwtEvent.Type<ErrorEventHandler> TYPE =
+    new GwtEvent.Type<ErrorEventHandler>();
 
-    private final Throwable cause;
+  private final Throwable cause;
 
-    public ErrorEvent(Throwable cause) {
-        this.cause = cause;
-    }
+  public ErrorEvent(Throwable cause) {
+    this.cause = cause;
+  }
 
-    @Override
-    public GwtEvent.Type<ErrorEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<ErrorEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(ErrorEventHandler handler) {
-        handler.onError(this);
-    }
+  @Override
+  protected void dispatch(ErrorEventHandler handler) {
+    handler.onError(this);
+  }
 
-    public Throwable getCause() {
-        return cause;
-    }
+  public Throwable getCause() {
+    return cause;
+  }
 }

@@ -17,9 +17,9 @@ package com.facebook.tsdb.tsdash.server.data;
 
 public class TsdbDataProviderException extends Exception {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public TsdbDataProviderException(String message) {
-        super(message);
-    }
+  public TsdbDataProviderException(String message) {
+    super(message);
+  }
 }

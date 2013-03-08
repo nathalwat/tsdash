@@ -19,32 +19,32 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class LogEvent extends GwtEvent<LogEventHandler> {
 
-    public static final GwtEvent.Type<LogEventHandler> TYPE =
-        new GwtEvent.Type<LogEventHandler>();
+  public static final GwtEvent.Type<LogEventHandler> TYPE =
+    new GwtEvent.Type<LogEventHandler>();
 
-    private final String title;
-    private final String message;
+  private final String title;
+  private final String message;
 
-    public LogEvent(String title, String message) {
-        this.title = title;
-        this.message = message;
-    }
+  public LogEvent(String title, String message) {
+    this.title = title;
+    this.message = message;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    @Override
-    public GwtEvent.Type<LogEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<LogEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(LogEventHandler handler) {
-        handler.onLog(this);
-    }
+  @Override
+  protected void dispatch(LogEventHandler handler) {
+    handler.onLog(this);
+  }
 }

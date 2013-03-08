@@ -22,20 +22,20 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 public class PlotResponseDecoder extends JSONDecoder<PlotResponse> {
-    @Override
-    PlotResponse decode(String jsonText) {
-        PlotResponse response = new PlotResponse();
-        response.dataSize = jsonText.length();
-        JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
-        response.serverLoadTime = (long) jsonObj.get("loadtime").isNumber()
-                .doubleValue();
-        response.plotURL = jsonObj.get("ploturl").isString().stringValue();
-        JSONArray jsonMetrics = jsonObj.get("metrics").isArray();
-        for (int i = 0; i < jsonMetrics.size(); i++) {
-            JSONObject metricObj = jsonMetrics.get(i).isObject();
-            response.metrics.add(MetricHeader.fromJSONObject(metricObj));
-        }
-        return response;
-
+  @Override
+  PlotResponse decode(String jsonText) {
+    PlotResponse response = new PlotResponse();
+    response.dataSize = jsonText.length();
+    JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
+    response.serverLoadTime = (long) jsonObj.get("loadtime").isNumber()
+        .doubleValue();
+    response.plotURL = jsonObj.get("ploturl").isString().stringValue();
+    JSONArray jsonMetrics = jsonObj.get("metrics").isArray();
+    for (int i = 0; i < jsonMetrics.size(); i++) {
+      JSONObject metricObj = jsonMetrics.get(i).isObject();
+      response.metrics.add(MetricHeader.fromJSONObject(metricObj));
     }
+    return response;
+
+  }
 }

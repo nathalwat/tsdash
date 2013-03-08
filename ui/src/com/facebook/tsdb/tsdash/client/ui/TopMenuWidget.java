@@ -30,60 +30,60 @@ import com.google.gwt.user.client.ui.Widget;
 public class TopMenuWidget extends Composite
 implements TopMenuPresenter.Widget {
 
-    private static TopMenuWidgetUiBinder uiBinder = GWT
-            .create(TopMenuWidgetUiBinder.class);
+  private static TopMenuWidgetUiBinder uiBinder = GWT
+      .create(TopMenuWidgetUiBinder.class);
 
-    interface TopMenuWidgetUiBinder extends UiBinder<Widget, TopMenuWidget> {
+  interface TopMenuWidgetUiBinder extends UiBinder<Widget, TopMenuWidget> {
+  }
+
+  interface TopMenuStyle extends CssResource {
+    String clicked();
+
+    String link();
+  }
+
+  public TopMenuWidget() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  private Object selected = null;
+
+  @UiField
+  Anchor graph;
+
+  @UiField
+  Anchor log;
+
+  @UiField
+  TopMenuStyle style;
+
+  @Override
+  public HasClickHandlers getGraphButton() {
+    return graph;
+  }
+
+  @Override
+  public HasClickHandlers getLogButton() {
+    return log;
+  }
+
+  @Override
+  public Object getSelected() {
+    return selected;
+  }
+
+  @Override
+  public void setSelected(Object button) {
+    if (selected == button) {
+      return;
     }
-
-    interface TopMenuStyle extends CssResource {
-        String clicked();
-
-        String link();
+    if (selected != null) {
+      CssHelper.replaceClass((UIObject) selected, style.clicked(),
+          style.link());
     }
-
-    public TopMenuWidget() {
-        initWidget(uiBinder.createAndBindUi(this));
-    }
-
-    private Object selected = null;
-
-    @UiField
-    Anchor graph;
-
-    @UiField
-    Anchor log;
-
-    @UiField
-    TopMenuStyle style;
-
-    @Override
-    public HasClickHandlers getGraphButton() {
-        return graph;
-    }
-
-    @Override
-    public HasClickHandlers getLogButton() {
-        return log;
-    }
-
-    @Override
-    public Object getSelected() {
-        return selected;
-    }
-
-    @Override
-    public void setSelected(Object button) {
-        if (selected == button) {
-            return;
-        }
-        if (selected != null) {
-            CssHelper.replaceClass((UIObject) selected, style.clicked(),
-                    style.link());
-        }
-        selected = button;
-        CssHelper
-                .replaceClass((UIObject) button, style.link(), style.clicked());
-    }
+    selected = button;
+    CssHelper
+        .replaceClass((UIObject) button, style.link(), style.clicked());
+  }
 
 }

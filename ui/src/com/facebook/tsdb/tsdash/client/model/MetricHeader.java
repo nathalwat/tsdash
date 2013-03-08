@@ -24,71 +24,71 @@ import com.google.gwt.json.client.JSONObject;
 
 public class MetricHeader implements Comparable<MetricHeader> {
 
-    public String name;
-    public HashSet<String> commonTags = new HashSet<String>();
-    public HashMap<String, ArrayList<String>> tagsSet =
-        new HashMap<String, ArrayList<String>>();
+  public String name;
+  public HashSet<String> commonTags = new HashSet<String>();
+  public HashMap<String, ArrayList<String>> tagsSet =
+    new HashMap<String, ArrayList<String>>();
 
-    public MetricHeader(String name) {
-        this.name = name;
-    }
+  public MetricHeader(String name) {
+    this.name = name;
+  }
 
-    public static MetricHeader fromJSONObject(JSONObject obj) {
-        MetricHeader metricData = new MetricHeader(obj.get("name").isString()
-                .stringValue());
-        // tags set
-        JSONObject tagsObj = obj.get("tags").isObject();
-        for (String tag : tagsObj.keySet()) {
-            ArrayList<String> tagValues = new ArrayList<String>();
-            JSONArray tagValuesArray = tagsObj.get(tag).isArray();
-            for (int i = 0; i < tagValuesArray.size(); i++) {
-                tagValues.add(tagValuesArray.get(i).isString().stringValue());
-            }
-            metricData.tagsSet.put(tag, tagValues);
-        }
-        // common tags
-        JSONArray commonTagsArray = obj.get("commontags").isArray();
-        for (int i = 0; i < commonTagsArray.size(); i++) {
-            metricData.commonTags.add(commonTagsArray.get(i).isString()
-                    .stringValue());
-        }
-        return metricData;
+  public static MetricHeader fromJSONObject(JSONObject obj) {
+    MetricHeader metricData = new MetricHeader(obj.get("name").isString()
+        .stringValue());
+    // tags set
+    JSONObject tagsObj = obj.get("tags").isObject();
+    for (String tag : tagsObj.keySet()) {
+      ArrayList<String> tagValues = new ArrayList<String>();
+      JSONArray tagValuesArray = tagsObj.get(tag).isArray();
+      for (int i = 0; i < tagValuesArray.size(); i++) {
+        tagValues.add(tagValuesArray.get(i).isString().stringValue());
+      }
+      metricData.tagsSet.put(tag, tagValues);
     }
+    // common tags
+    JSONArray commonTagsArray = obj.get("commontags").isArray();
+    for (int i = 0; i < commonTagsArray.size(); i++) {
+      metricData.commonTags.add(commonTagsArray.get(i).isString()
+          .stringValue());
+    }
+    return metricData;
+  }
 
-    @Override
-    public String toString() {
-        String ret = name + ": ";
-        for (String tag : tagsSet.keySet()) {
-            ret += "{" + tag + ":";
-            for (String tagValue : tagsSet.get(tag)) {
-                ret += " " + tagValue;
-            }
-            ret += "}, ";
-        }
-        return ret;
+  @Override
+  public String toString() {
+    String ret = name + ": ";
+    for (String tag : tagsSet.keySet()) {
+      ret += "{" + tag + ":";
+      for (String tagValue : tagsSet.get(tag)) {
+        ret += " " + tagValue;
+      }
+      ret += "}, ";
     }
+    return ret;
+  }
 
-    @Override
-    public int compareTo(MetricHeader other) {
-        if (tagsSet.size() != other.tagsSet.size()) {
-            return tagsSet.size() - other.tagsSet.size();
-        }
-        for (String tag : tagsSet.keySet()) {
-            if (!other.tagsSet.containsKey(tag)) {
-                return 1;
-            }
-            ArrayList<String> tagValues = tagsSet.get(tag);
-            ArrayList<String> otherTagValues = other.tagsSet.get(tag);
-            if (tagValues.size() != otherTagValues.size()) {
-                return 1;
-            }
-            HashSet<String> otherSet = new HashSet<String>(otherTagValues);
-            for (String tagValue : tagValues) {
-                if (!otherSet.contains(tagValue)) {
-                    return 1;
-                }
-            }
-        }
-        return 0;
+  @Override
+  public int compareTo(MetricHeader other) {
+    if (tagsSet.size() != other.tagsSet.size()) {
+      return tagsSet.size() - other.tagsSet.size();
     }
+    for (String tag : tagsSet.keySet()) {
+      if (!other.tagsSet.containsKey(tag)) {
+        return 1;
+      }
+      ArrayList<String> tagValues = tagsSet.get(tag);
+      ArrayList<String> otherTagValues = other.tagsSet.get(tag);
+      if (tagValues.size() != otherTagValues.size()) {
+        return 1;
+      }
+      HashSet<String> otherSet = new HashSet<String>(otherTagValues);
+      for (String tagValue : tagValues) {
+        if (!otherSet.contains(tagValue)) {
+          return 1;
+        }
+      }
+    }
+    return 0;
+  }
 }

@@ -21,10 +21,10 @@ import com.google.gwt.json.client.JSONParser;
 
 public class MetricHeaderDecoder extends JSONDecoder<MetricHeader> {
 
-    @Override
-    MetricHeader decode(String jsonText) {
-        JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
-        return MetricHeader.fromJSONObject(jsonObj);
-    }
+  @Override
+  MetricHeader decode(String jsonText) {
+    JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
+    return MetricHeader.fromJSONObject(jsonObj);
+  }
 
 }

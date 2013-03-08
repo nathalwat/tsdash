@@ -39,196 +39,196 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class TimePresenter implements Presenter {
 
-    public interface TimeWidget {
-        HasClickHandlers historyModeButton();
+  public interface TimeWidget {
+    HasClickHandlers historyModeButton();
 
-        HasClickHandlers absoluteModeButton();
+    HasClickHandlers absoluteModeButton();
 
-        Object selectedMode();
+    Object selectedMode();
 
-        void selectedMode(Object button);
+    void selectedMode(Object button);
 
-        HasClickHandlers last15mButton();
+    HasClickHandlers last15mButton();
 
-        HasClickHandlers last1hButton();
+    HasClickHandlers last1hButton();
 
-        HasClickHandlers last6hButton();
+    HasClickHandlers last6hButton();
 
-        HasClickHandlers last1dButton();
+    HasClickHandlers last1dButton();
 
-        HasClickHandlers last1wButton();
+    HasClickHandlers last1wButton();
 
-        Object selectedHistory();
+    Object selectedHistory();
 
-        void selectedHistory(Object button);
+    void selectedHistory(Object button);
 
-        HasValue<Date> timeFromValue();
+    HasValue<Date> timeFromValue();
 
-        HasValue<Date> timeToValue();
+    HasValue<Date> timeToValue();
 
-        HasValueChangeHandlers<Date> timeFrom();
+    HasValueChangeHandlers<Date> timeFrom();
 
-        HasValueChangeHandlers<Date> timeTo();
+    HasValueChangeHandlers<Date> timeTo();
+  }
+
+  private final HandlerManager eventBus;
+  private final TimeWidget widget;
+
+  // values for the history buttons, in seconds
+  private final HashMap<Object, Long> historyButton2Range =
+    new HashMap<Object, Long>();
+  private final TreeMap<Long, Object> historyRange2Button =
+    new TreeMap<Long, Object>();
+
+  public TimePresenter(HandlerManager eventBus, TimeWidget widget) {
+    this.eventBus = eventBus;
+    this.widget = widget;
+    bindWidget();
+    bindAutoReload();
+
+    historyButton2Range.put(widget.last15mButton(), (long) 15 * 60);
+    historyButton2Range.put(widget.last1hButton(), (long) 60 * 60);
+    historyButton2Range.put(widget.last6hButton(), (long) 6 * 60 * 60);
+    historyButton2Range.put(widget.last1dButton(), (long) 24 * 60 * 60);
+    historyButton2Range.put(widget.last1wButton(), (long) 7 * 24 * 60 * 60);
+    // create the inverse mapping by using a tree-map in order to have the
+    // ranges sorted
+    for (Object button : historyButton2Range.keySet()) {
+      historyRange2Button.put(historyButton2Range.get(button), button);
     }
+  }
 
-    private final HandlerManager eventBus;
-    private final TimeWidget widget;
+  private void bindAutoReload() {
+    eventBus.addHandler(AutoReloadEvent.TYPE, new AutoReloadEventHandler() {
+      @Override
+      public void onPeriodChange(AutoReloadEvent event) {
+        // not interesting here
+      }
 
-    // values for the history buttons, in seconds
-    private final HashMap<Object, Long> historyButton2Range =
-        new HashMap<Object, Long>();
-    private final TreeMap<Long, Object> historyRange2Button =
-        new TreeMap<Long, Object>();
+      @Override
+      public void onEnable(AutoReloadEvent event) {
+        // this is not interesting either
+      }
 
-    public TimePresenter(HandlerManager eventBus, TimeWidget widget) {
-        this.eventBus = eventBus;
-        this.widget = widget;
-        bindWidget();
-        bindAutoReload();
+      @Override
+      public void onLaunch(AutoReloadEvent event) {
+        TimeRange current = new TimeRange(event.getPeriod());
+        // update only the absolute date values
+        widget.timeFromValue().setValue(new Date(current.from), false);
+        widget.timeToValue().setValue(new Date(current.to), false);
+      }
+    });
+  }
 
-        historyButton2Range.put(widget.last15mButton(), (long) 15 * 60);
-        historyButton2Range.put(widget.last1hButton(), (long) 60 * 60);
-        historyButton2Range.put(widget.last6hButton(), (long) 6 * 60 * 60);
-        historyButton2Range.put(widget.last1dButton(), (long) 24 * 60 * 60);
-        historyButton2Range.put(widget.last1wButton(), (long) 7 * 24 * 60 * 60);
-        // create the inverse mapping by using a tree-map in order to have the
-        // ranges sorted
-        for (Object button : historyButton2Range.keySet()) {
-            historyRange2Button.put(historyButton2Range.get(button), button);
+  private void bindWidget() {
+    ClickHandler modeHandler = new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        // ignore the selected click
+        if (widget.selectedMode().equals(event.getSource())) {
+          return;
         }
-    }
-
-    private void bindAutoReload() {
-        eventBus.addHandler(AutoReloadEvent.TYPE, new AutoReloadEventHandler() {
-            @Override
-            public void onPeriodChange(AutoReloadEvent event) {
-                // not interesting here
-            }
-
-            @Override
-            public void onEnable(AutoReloadEvent event) {
-                // this is not interesting either
-            }
-
-            @Override
-            public void onLaunch(AutoReloadEvent event) {
-                TimeRange current = new TimeRange(event.getPeriod());
-                // update only the absolute date values
-                widget.timeFromValue().setValue(new Date(current.from), false);
-                widget.timeToValue().setValue(new Date(current.to), false);
-            }
-        });
-    }
-
-    private void bindWidget() {
-        ClickHandler modeHandler = new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                // ignore the selected click
-                if (widget.selectedMode().equals(event.getSource())) {
-                    return;
-                }
-                widget.selectedMode(event.getSource());
-            }
-        };
-        widget.historyModeButton().addClickHandler(modeHandler);
-        widget.absoluteModeButton().addClickHandler(modeHandler);
-        // bind the history mode buttons
-        ClickHandler historyOptionsHandler = new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (event.getSource().equals(widget.selectedHistory())) {
-                    return;
-                }
-                widget.selectedHistory(event.getSource());
-                // fire time range change event
-                TimeRange timeRange = new TimeRange(
-                        historyButton2Range.get(event.getSource()));
-                // sync the absolute time elements
-                widget.timeFromValue()
-                        .setValue(new Date(timeRange.from), false);
-                widget.timeToValue().setValue(new Date(timeRange.to), false);
-                // fire the event to the application controller
-                eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.HISTORY,
-                        timeRange));
-            }
-        };
-        widget.last15mButton().addClickHandler(historyOptionsHandler);
-        widget.last1hButton().addClickHandler(historyOptionsHandler);
-        widget.last6hButton().addClickHandler(historyOptionsHandler);
-        widget.last1dButton().addClickHandler(historyOptionsHandler);
-        widget.last1wButton().addClickHandler(historyOptionsHandler);
-        // bind the absolute mode date pickers
-        widget.timeFrom().addValueChangeHandler(new ValueChangeHandler<Date>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Date> event) {
-                Date to = widget.timeToValue().getValue();
-                if (event.getValue().after(to)) {
-                    Window.alert("Incorrect 'from' date");
-                    widget.timeFromValue().setValue(
-                            new Date(to.getTime() - 15 * 60 * 1000), false);
-                    return;
-                }
-                TimeRange range = new TimeRange(event.getValue().getTime(), to
-                        .getTime());
-                eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.ABSOLUTE,
-                        range));
-                widget.selectedHistory(null);
-            }
-        });
-        widget.timeTo().addValueChangeHandler(new ValueChangeHandler<Date>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Date> event) {
-                Date from = widget.timeFromValue().getValue();
-                if (from.after(event.getValue())) {
-                    Window.alert("Incorrect 'to' date");
-                    widget.timeToValue().setValue(new Date(), false);
-                    return;
-                }
-                TimeRange range = new TimeRange(from.getTime(), event
-                        .getValue().getTime());
-                eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.ABSOLUTE,
-                        range));
-                widget.selectedHistory(null);
-            }
-        });
-    }
-
-    private void selectHistoryRange(TimeRange timeRange) {
-        boolean selected = false;
-        // assuming the ranges are sorted (we use a tree-map)
-        long range = 0;
-        for (Iterator<Long> it = historyRange2Button.keySet().iterator(); it
-                .hasNext();) {
-            range = it.next();
-            if (timeRange.getSeconds() <= range) {
-                widget.selectedHistory(historyRange2Button.get(range));
-                selected = true;
-                break;
-            }
+        widget.selectedMode(event.getSource());
+      }
+    };
+    widget.historyModeButton().addClickHandler(modeHandler);
+    widget.absoluteModeButton().addClickHandler(modeHandler);
+    // bind the history mode buttons
+    ClickHandler historyOptionsHandler = new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        if (event.getSource().equals(widget.selectedHistory())) {
+          return;
         }
-        if (!selected) {
-            // we get the last value of range
-            widget.selectedHistory(historyRange2Button.get(range));
+        widget.selectedHistory(event.getSource());
+        // fire time range change event
+        TimeRange timeRange = new TimeRange(
+            historyButton2Range.get(event.getSource()));
+        // sync the absolute time elements
+        widget.timeFromValue()
+            .setValue(new Date(timeRange.from), false);
+        widget.timeToValue().setValue(new Date(timeRange.to), false);
+        // fire the event to the application controller
+        eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.HISTORY,
+            timeRange));
+      }
+    };
+    widget.last15mButton().addClickHandler(historyOptionsHandler);
+    widget.last1hButton().addClickHandler(historyOptionsHandler);
+    widget.last6hButton().addClickHandler(historyOptionsHandler);
+    widget.last1dButton().addClickHandler(historyOptionsHandler);
+    widget.last1wButton().addClickHandler(historyOptionsHandler);
+    // bind the absolute mode date pickers
+    widget.timeFrom().addValueChangeHandler(new ValueChangeHandler<Date>() {
+      @Override
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        Date to = widget.timeToValue().getValue();
+        if (event.getValue().after(to)) {
+          Window.alert("Incorrect 'from' date");
+          widget.timeFromValue().setValue(
+              new Date(to.getTime() - 15 * 60 * 1000), false);
+          return;
         }
-    }
-
-    private void initTimeWidget(ApplicationState appState) {
-        selectHistoryRange(appState.timeRange);
-        widget.timeToValue().setValue(new Date(appState.timeRange.to), false);
-        widget.timeFromValue().setValue(new Date(appState.timeRange.from),
-                false);
-        if (appState.timeMode.equals(TimeMode.HISTORY)) {
-            widget.selectedMode(widget.historyModeButton());
-        } else if (appState.timeMode.equals(TimeMode.ABSOLUTE)) {
-            widget.selectedMode(widget.absoluteModeButton());
+        TimeRange range = new TimeRange(event.getValue().getTime(), to
+            .getTime());
+        eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.ABSOLUTE,
+            range));
+        widget.selectedHistory(null);
+      }
+    });
+    widget.timeTo().addValueChangeHandler(new ValueChangeHandler<Date>() {
+      @Override
+      public void onValueChange(ValueChangeEvent<Date> event) {
+        Date from = widget.timeFromValue().getValue();
+        if (from.after(event.getValue())) {
+          Window.alert("Incorrect 'to' date");
+          widget.timeToValue().setValue(new Date(), false);
+          return;
         }
-    }
+        TimeRange range = new TimeRange(from.getTime(), event
+            .getValue().getTime());
+        eventBus.fireEvent(new TimeRangeChangeEvent(TimeMode.ABSOLUTE,
+            range));
+        widget.selectedHistory(null);
+      }
+    });
+  }
 
-    @Override
-    public void go(HasWidgets container, ApplicationState appState) {
-        container.add((com.google.gwt.user.client.ui.Widget) widget);
-        initTimeWidget(appState);
+  private void selectHistoryRange(TimeRange timeRange) {
+    boolean selected = false;
+    // assuming the ranges are sorted (we use a tree-map)
+    long range = 0;
+    for (Iterator<Long> it = historyRange2Button.keySet().iterator(); it
+        .hasNext();) {
+      range = it.next();
+      if (timeRange.getSeconds() <= range) {
+        widget.selectedHistory(historyRange2Button.get(range));
+        selected = true;
+        break;
+      }
     }
+    if (!selected) {
+      // we get the last value of range
+      widget.selectedHistory(historyRange2Button.get(range));
+    }
+  }
+
+  private void initTimeWidget(ApplicationState appState) {
+    selectHistoryRange(appState.timeRange);
+    widget.timeToValue().setValue(new Date(appState.timeRange.to), false);
+    widget.timeFromValue().setValue(new Date(appState.timeRange.from),
+        false);
+    if (appState.timeMode.equals(TimeMode.HISTORY)) {
+      widget.selectedMode(widget.historyModeButton());
+    } else if (appState.timeMode.equals(TimeMode.ABSOLUTE)) {
+      widget.selectedMode(widget.absoluteModeButton());
+    }
+  }
+
+  @Override
+  public void go(HasWidgets container, ApplicationState appState) {
+    container.add((com.google.gwt.user.client.ui.Widget) widget);
+    initTimeWidget(appState);
+  }
 
 }

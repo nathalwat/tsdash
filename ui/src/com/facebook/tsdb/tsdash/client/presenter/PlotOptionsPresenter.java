@@ -26,101 +26,101 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class PlotOptionsPresenter implements Presenter {
 
-    public interface Widget {
-        HasClickHandlers interactiveMode();
+  public interface Widget {
+    HasClickHandlers interactiveMode();
 
-        HasClickHandlers imageMode();
+    HasClickHandlers imageMode();
 
-        void selectedMode(Object button);
+    void selectedMode(Object button);
 
-        Object selectedMode();
+    Object selectedMode();
 
-        void imageOptionsVisible(boolean visible);
+    void imageOptionsVisible(boolean visible);
 
-        HasClickHandlers lineChartButton();
+    HasClickHandlers lineChartButton();
 
-        HasClickHandlers surfaceButton();
+    HasClickHandlers surfaceButton();
 
-        HasValue<Boolean> lineChart();
+    HasValue<Boolean> lineChart();
 
-        HasValue<Boolean> surface();
+    HasValue<Boolean> surface();
 
-        void setImageTypeSelected(Object selected);
+    void setImageTypeSelected(Object selected);
 
-        void setSurfaceOptionsVisible(boolean visible);
+    void setSurfaceOptionsVisible(boolean visible);
 
-        HasClickHandlers colorButton();
+    HasClickHandlers colorButton();
 
-        boolean colorPaletteSelected();
+    boolean colorPaletteSelected();
 
-        void colorPaletteSelected(boolean selected);
-    }
+    void colorPaletteSelected(boolean selected);
+  }
 
-    private final HandlerManager eventBus;
-    private final Widget widget;
+  private final HandlerManager eventBus;
+  private final Widget widget;
 
-    public PlotOptionsPresenter(HandlerManager eventBus, Widget widget) {
-        this.eventBus = eventBus;
-        this.widget = widget;
-        bindWidget();
-    }
+  public PlotOptionsPresenter(HandlerManager eventBus, Widget widget) {
+    this.eventBus = eventBus;
+    this.widget = widget;
+    bindWidget();
+  }
 
-    private void bindWidget() {
-        // MODE
-        ClickHandler modeHandler = new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (event.getSource() == widget.selectedMode()) {
-                    return;
-                }
-                widget.selectedMode(event.getSource());
-                boolean interactive = widget.selectedMode() == widget
-                        .interactiveMode();
-                widget.imageOptionsVisible(!interactive);
-                eventBus.fireEvent(new PlotOptionsEvent(interactive, widget
-                        .surface().getValue(), widget.colorPaletteSelected()));
-            }
-        };
-        widget.imageMode().addClickHandler(modeHandler);
-        widget.interactiveMode().addClickHandler(modeHandler);
-        // IMAGE TYPE
-        ClickHandler imageTypeHandler = new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                boolean surface = widget.surface().getValue();
-                widget.setSurfaceOptionsVisible(surface);
-                eventBus.fireEvent(new PlotOptionsEvent(
-                        widget.selectedMode() == widget.interactiveMode(),
-                        widget.surface().getValue(), widget
-                                .colorPaletteSelected()));
-            }
-        };
-        widget.lineChartButton().addClickHandler(imageTypeHandler);
-        widget.surfaceButton().addClickHandler(imageTypeHandler);
-        widget.colorButton().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                eventBus.fireEvent(new PlotOptionsEvent(
-                        widget.selectedMode() == widget.interactiveMode(),
-                        widget.surface().getValue(), widget
-                                .colorPaletteSelected()));
-            }
-        });
-    }
-
-    @Override
-    public void go(HasWidgets container, ApplicationState appState) {
-        container.add((com.google.gwt.user.client.ui.Widget) widget);
-        if (appState.interactive) {
-            widget.selectedMode(widget.interactiveMode());
-            widget.imageOptionsVisible(false);
-        } else {
-            widget.selectedMode(widget.imageMode());
-            if (appState.surface) {
-                widget.setImageTypeSelected(widget.surfaceButton());
-            } else {
-                widget.setImageTypeSelected(widget.lineChartButton());
-            }
+  private void bindWidget() {
+    // MODE
+    ClickHandler modeHandler = new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        if (event.getSource() == widget.selectedMode()) {
+          return;
         }
+        widget.selectedMode(event.getSource());
+        boolean interactive = widget.selectedMode() == widget
+            .interactiveMode();
+        widget.imageOptionsVisible(!interactive);
+        eventBus.fireEvent(new PlotOptionsEvent(interactive, widget
+            .surface().getValue(), widget.colorPaletteSelected()));
+      }
+    };
+    widget.imageMode().addClickHandler(modeHandler);
+    widget.interactiveMode().addClickHandler(modeHandler);
+    // IMAGE TYPE
+    ClickHandler imageTypeHandler = new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        boolean surface = widget.surface().getValue();
+        widget.setSurfaceOptionsVisible(surface);
+        eventBus.fireEvent(new PlotOptionsEvent(
+            widget.selectedMode() == widget.interactiveMode(),
+            widget.surface().getValue(), widget
+                .colorPaletteSelected()));
+      }
+    };
+    widget.lineChartButton().addClickHandler(imageTypeHandler);
+    widget.surfaceButton().addClickHandler(imageTypeHandler);
+    widget.colorButton().addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        eventBus.fireEvent(new PlotOptionsEvent(
+            widget.selectedMode() == widget.interactiveMode(),
+            widget.surface().getValue(), widget
+                .colorPaletteSelected()));
+      }
+    });
+  }
+
+  @Override
+  public void go(HasWidgets container, ApplicationState appState) {
+    container.add((com.google.gwt.user.client.ui.Widget) widget);
+    if (appState.interactive) {
+      widget.selectedMode(widget.interactiveMode());
+      widget.imageOptionsVisible(false);
+    } else {
+      widget.selectedMode(widget.imageMode());
+      if (appState.surface) {
+        widget.setImageTypeSelected(widget.surfaceButton());
+      } else {
+        widget.setImageTypeSelected(widget.lineChartButton());
+      }
     }
+  }
 }

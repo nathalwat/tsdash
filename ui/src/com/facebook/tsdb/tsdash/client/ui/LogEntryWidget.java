@@ -25,27 +25,27 @@ import com.google.gwt.user.client.ui.Widget;
 import com.facebook.tsdb.tsdash.client.presenter.LogPresenter;
 
 public class LogEntryWidget extends Composite implements
-        LogPresenter.LogEntryWidget {
+    LogPresenter.LogEntryWidget {
 
-    private static LogEntryWidgetUiBinder uiBinder = GWT
-            .create(LogEntryWidgetUiBinder.class);
+  private static LogEntryWidgetUiBinder uiBinder = GWT
+      .create(LogEntryWidgetUiBinder.class);
 
-    interface LogEntryWidgetUiBinder extends UiBinder<Widget, LogEntryWidget> {
-    }
+  interface LogEntryWidgetUiBinder extends UiBinder<Widget, LogEntryWidget> {
+  }
 
-    @UiField
-    Label title;
+  @UiField
+  Label title;
 
-    @UiField
-    Label message;
+  @UiField
+  Label message;
 
-    public LogEntryWidget() {
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public LogEntryWidget() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    public LogEntryWidget(String title, String message) {
-        initWidget(uiBinder.createAndBindUi(this));
-        this.title.setText(title);
-        this.message.setText(message);
-    }
+  public LogEntryWidget(String title, String message) {
+    initWidget(uiBinder.createAndBindUi(this));
+    this.title.setText(title);
+    this.message.setText(message);
+  }
 }

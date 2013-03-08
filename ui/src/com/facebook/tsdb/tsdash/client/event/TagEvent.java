@@ -20,50 +20,50 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class TagEvent extends GwtEvent<TagEventHandler> {
 
-    public static final GwtEvent.Type<TagEventHandler> TYPE =
-        new GwtEvent.Type<TagEventHandler>();
+  public static final GwtEvent.Type<TagEventHandler> TYPE =
+    new GwtEvent.Type<TagEventHandler>();
 
-    public enum Operation {
-        SET, REMOVE;
+  public enum Operation {
+    SET, REMOVE;
+  }
+
+  private final Operation op;
+  private final Metric metric;
+  private final String tagName;
+  private final String tagValue;
+
+  public TagEvent(Operation op, Metric metric, String tagName,
+      String tagValue) {
+    this.op = op;
+    this.metric = metric;
+    this.tagName = tagName;
+    this.tagValue = tagValue;
+  }
+
+  public Metric getMetric() {
+    return metric;
+  }
+
+  public String getTagName() {
+    return tagName;
+  }
+
+  public String getTagValue() {
+    return tagValue;
+  }
+
+  @Override
+  public GwtEvent.Type<TagEventHandler> getAssociatedType() {
+    return TYPE;
+  }
+
+  @Override
+  protected void dispatch(TagEventHandler handler) {
+    if (op == Operation.SET) {
+      handler.onSet(this);
+    } else if (op == Operation.REMOVE) {
+      handler.onRemove(this);
     }
-
-    private final Operation op;
-    private final Metric metric;
-    private final String tagName;
-    private final String tagValue;
-
-    public TagEvent(Operation op, Metric metric, String tagName,
-            String tagValue) {
-        this.op = op;
-        this.metric = metric;
-        this.tagName = tagName;
-        this.tagValue = tagValue;
-    }
-
-    public Metric getMetric() {
-        return metric;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public String getTagValue() {
-        return tagValue;
-    }
-
-    @Override
-    public GwtEvent.Type<TagEventHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(TagEventHandler handler) {
-        if (op == Operation.SET) {
-            handler.onSet(this);
-        } else if (op == Operation.REMOVE) {
-            handler.onRemove(this);
-        }
-    }
+  }
 
 }

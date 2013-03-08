@@ -19,15 +19,15 @@ import java.util.ArrayList;
 
 public class PlotResponse {
 
-    public long dataSize = 0;
-    public long serverLoadTime = 0;
-    public ArrayList<MetricHeader> metrics = new ArrayList<MetricHeader>();
-    public String plotURL;
+  public long dataSize = 0;
+  public long serverLoadTime = 0;
+  public ArrayList<MetricHeader> metrics = new ArrayList<MetricHeader>();
+  public String plotURL;
 
-    @Override
-    public String toString() {
-        return "Data: " + dataSize + " bytes; " + "Load time: "
-                + serverLoadTime + " ms; " + "Plot URL: " + plotURL + " "
-                + "Metrics loaded: " + metrics.size();
-    }
+  @Override
+  public String toString() {
+    return "Data: " + dataSize + " bytes; " + "Load time: "
+        + serverLoadTime + " ms; " + "Plot URL: " + plotURL + " "
+        + "Metrics loaded: " + metrics.size();
+  }
 }

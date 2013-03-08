@@ -31,92 +31,92 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TagWidget extends Composite implements MetricPresenter.TagWidget {
 
-    private static TagWidgetUiBinder uiBinder = GWT
-            .create(TagWidgetUiBinder.class);
+  private static TagWidgetUiBinder uiBinder = GWT
+      .create(TagWidgetUiBinder.class);
 
-    interface TagWidgetUiBinder extends UiBinder<Widget, TagWidget> {
+  interface TagWidgetUiBinder extends UiBinder<Widget, TagWidget> {
+  }
+
+  @UiField
+  Panel container;
+
+  @UiField
+  Label name;
+
+  @UiField
+  Label value;
+
+  @UiField
+  Label removeValue;
+
+  @UiField
+  ListBox options;
+
+  @UiField
+  Anchor apply;
+
+  public TagWidget(String tagName, String tagValue) {
+    initWidget(uiBinder.createAndBindUi(this));
+    name.setText(tagName);
+    value.setText("=" + tagValue);
+    // add the only option even if we hide the list box
+    // this way we can still access getSelectedValue()
+    options.addItem(tagValue, tagValue);
+    optionsVisible(false);
+  }
+
+  public TagWidget(String tagName, ArrayList<String> options) {
+    initWidget(uiBinder.createAndBindUi(this));
+    name.setText(tagName);
+    removeValue.setVisible(false);
+    if (options.size() == 0) {
+      optionsVisible(false);
+      value.setText("NULL");
+    } else if (options.size() == 1) {
+      String tagValue = options.get(0);
+      value.setText("=" + tagValue);
+      optionsVisible(false);
+    } else {
+      // multiple options
+      for (String tagValue : options) {
+        this.options.addItem(tagValue, tagValue);
+      }
+      value.setText("(" + options.size() + ")");
+      value.setTitle(options.size() + " values for this tag");
     }
+  }
 
-    @UiField
-    Panel container;
+  @Override
+  public HasClickHandlers deleteButton() {
+    return null;
+  }
 
-    @UiField
-    Label name;
+  @Override
+  public HasClickHandlers setValueButton() {
+    return apply;
+  }
 
-    @UiField
-    Label value;
+  @Override
+  public HasClickHandlers removeValueButton() {
+    return removeValue;
+  }
 
-    @UiField
-    Label removeValue;
+  @Override
+  public String getSelectedValue() {
+    return options.getItemText(options.getSelectedIndex());
+  }
 
-    @UiField
-    ListBox options;
+  @Override
+  public void optionsVisible(boolean visible) {
+    options.setVisible(visible);
+    apply.setVisible(visible);
+  }
 
-    @UiField
-    Anchor apply;
-
-    public TagWidget(String tagName, String tagValue) {
-        initWidget(uiBinder.createAndBindUi(this));
-        name.setText(tagName);
-        value.setText("=" + tagValue);
-        // add the only option even if we hide the list box
-        // this way we can still access getSelectedValue()
-        options.addItem(tagValue, tagValue);
-        optionsVisible(false);
-    }
-
-    public TagWidget(String tagName, ArrayList<String> options) {
-        initWidget(uiBinder.createAndBindUi(this));
-        name.setText(tagName);
-        removeValue.setVisible(false);
-        if (options.size() == 0) {
-            optionsVisible(false);
-            value.setText("NULL");
-        } else if (options.size() == 1) {
-            String tagValue = options.get(0);
-            value.setText("=" + tagValue);
-            optionsVisible(false);
-        } else {
-            // multiple options
-            for (String tagValue : options) {
-                this.options.addItem(tagValue, tagValue);
-            }
-            value.setText("(" + options.size() + ")");
-            value.setTitle(options.size() + " values for this tag");
-        }
-    }
-
-    @Override
-    public HasClickHandlers deleteButton() {
-        return null;
-    }
-
-    @Override
-    public HasClickHandlers setValueButton() {
-        return apply;
-    }
-
-    @Override
-    public HasClickHandlers removeValueButton() {
-        return removeValue;
-    }
-
-    @Override
-    public String getSelectedValue() {
-        return options.getItemText(options.getSelectedIndex());
-    }
-
-    @Override
-    public void optionsVisible(boolean visible) {
-        options.setVisible(visible);
-        apply.setVisible(visible);
-    }
-
-    @Override
-    public void setValue(String value) {
-        optionsVisible(false);
-        this.value.setText("=" + value);
-        this.value.setTitle("");
-    }
+  @Override
+  public void setValue(String value) {
+    optionsVisible(false);
+    this.value.setText("=" + value);
+    this.value.setTitle("");
+  }
 
 }

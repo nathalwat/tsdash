@@ -29,25 +29,25 @@ import com.facebook.tsdb.tsdash.server.data.TsdbDataProviderFactory;
 
 public class MetricsEndpoint extends TsdbServlet {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        PrintWriter out = response.getWriter();
-        try {
-            TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
-            String[] metrics = dataProvider.getMetrics();
-            response.setContentType("text/plain");
-            JSONArray encoded = new JSONArray();
-            for (String metric : metrics) {
-                encoded.add(metric);
-            }
-            out.println(encoded.toJSONString());
-        } catch (Exception e) {
-            out.println(getErrorResponse(e));
-        }
-        out.close();
+  @Override
+  @SuppressWarnings("unchecked")
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    PrintWriter out = response.getWriter();
+    try {
+      TsdbDataProvider dataProvider = TsdbDataProviderFactory.get();
+      String[] metrics = dataProvider.getMetrics();
+      response.setContentType("text/plain");
+      JSONArray encoded = new JSONArray();
+      for (String metric : metrics) {
+        encoded.add(metric);
+      }
+      out.println(encoded.toJSONString());
+    } catch (Exception e) {
+      out.println(getErrorResponse(e));
     }
+    out.close();
+  }
 }

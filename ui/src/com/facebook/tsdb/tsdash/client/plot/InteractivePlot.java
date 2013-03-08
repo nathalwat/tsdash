@@ -39,85 +39,85 @@ import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Anno
 
 public class InteractivePlot extends Plot {
 
-    private JSONObject timeSeriesJSON = null;
-    private static boolean APILoaded = false;
+  private JSONObject timeSeriesJSON = null;
+  private static boolean APILoaded = false;
 
-    public InteractivePlot(HandlerManager eventBus, HasWidgets container) {
-        super(eventBus, container);
+  public InteractivePlot(HandlerManager eventBus, HasWidgets container) {
+    super(eventBus, container);
+  }
+
+  @Override
+  public void render(final Command onRendered) {
+    if (!APILoaded) {
+      GWT.log("Loading the API...");
+      VisualizationUtils.loadVisualizationApi(new Runnable() {
+        @Override
+        public void run() {
+          APILoaded = true;
+          GWT.log("API loaded");
+          render(onRendered);
+        }
+      }, AnnotatedTimeLine.PACKAGE);
+      return;
     }
+    if (timeSeriesJSON == null) {
+      GWT.log("cannot render: null data");
+      return;
+    }
+    DataTable dataTable = DataTable.create(timeSeriesJSON
+        .getJavaScriptObject());
+    Widget w = (Widget) container;
+    final AnnotatedTimeLine newChart = new AnnotatedTimeLine(dataTable,
+        getChartOptions(), (w.getOffsetWidth() - 10) + "px",
+        (w.getOffsetHeight() - 10) + "px");
+    newChart.addReadyHandler(new ReadyHandler() {
+      @Override
+      public void onReady(ReadyEvent event) {
+        endRender(newChart);
+        onRendered.execute();
+      }
+    });
+    startRender(newChart);
+  }
 
-    @Override
-    public void render(final Command onRendered) {
-        if (!APILoaded) {
-            GWT.log("Loading the API...");
-            VisualizationUtils.loadVisualizationApi(new Runnable() {
-                @Override
-                public void run() {
-                    APILoaded = true;
-                    GWT.log("API loaded");
-                    render(onRendered);
-                }
-            }, AnnotatedTimeLine.PACKAGE);
-            return;
-        }
-        if (timeSeriesJSON == null) {
-            GWT.log("cannot render: null data");
-            return;
-        }
-        DataTable dataTable = DataTable.create(timeSeriesJSON
-                .getJavaScriptObject());
-        Widget w = (Widget) container;
-        final AnnotatedTimeLine newChart = new AnnotatedTimeLine(dataTable,
-                getChartOptions(), (w.getOffsetWidth() - 10) + "px",
-                (w.getOffsetHeight() - 10) + "px");
-        newChart.addReadyHandler(new ReadyHandler() {
-            @Override
-            public void onReady(ReadyEvent event) {
-                endRender(newChart);
-                onRendered.execute();
+  private static AnnotatedTimeLine.Options getChartOptions() {
+    AnnotatedTimeLine.Options options = AnnotatedTimeLine.Options.create();
+    options.setDateFormat("H:mm:ss");
+    options.setLegendPosition(AnnotatedLegendPosition.NEW_ROW);
+    return options;
+  }
+
+  @Override
+  public void loadAndRender(TimeRange timeRange, ArrayList<Metric> metrics,
+      HTTPService service,
+      final AsyncCallback<ArrayList<MetricHeader>> callback,
+      final Command onRender) {
+    service.loadTimeSeries(timeRange, metrics,
+        new AsyncCallback<TimeSeriesResponse>() {
+          @Override
+          public void onFailure(Throwable caught) {
+            callback.onFailure(caught);
+          }
+
+          @Override
+          public void onSuccess(final TimeSeriesResponse result) {
+            eventBus.fireEvent(new LogEvent("Data Load", ""
+                + result));
+            if (result.rows == 0) {
+              callback.onFailure(new TimeSeriesException(
+                  "no data"));
+              return;
             }
+            timeSeriesJSON = result.timeSeriesJSON;
+            onRender.execute();
+            render(new Command() {
+              @Override
+              public void execute() {
+                callback.onSuccess(result.metrics);
+              }
+            });
+          }
         });
-        startRender(newChart);
-    }
-
-    private static AnnotatedTimeLine.Options getChartOptions() {
-        AnnotatedTimeLine.Options options = AnnotatedTimeLine.Options.create();
-        options.setDateFormat("H:mm:ss");
-        options.setLegendPosition(AnnotatedLegendPosition.NEW_ROW);
-        return options;
-    }
-
-    @Override
-    public void loadAndRender(TimeRange timeRange, ArrayList<Metric> metrics,
-            HTTPService service,
-            final AsyncCallback<ArrayList<MetricHeader>> callback,
-            final Command onRender) {
-        service.loadTimeSeries(timeRange, metrics,
-                new AsyncCallback<TimeSeriesResponse>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(final TimeSeriesResponse result) {
-                        eventBus.fireEvent(new LogEvent("Data Load", ""
-                                + result));
-                        if (result.rows == 0) {
-                            callback.onFailure(new TimeSeriesException(
-                                    "no data"));
-                            return;
-                        }
-                        timeSeriesJSON = result.timeSeriesJSON;
-                        onRender.execute();
-                        render(new Command() {
-                            @Override
-                            public void execute() {
-                                callback.onSuccess(result.metrics);
-                            }
-                        });
-                    }
-                });
-    }
+  }
 
 }

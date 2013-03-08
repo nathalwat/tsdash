@@ -24,31 +24,31 @@ import com.google.gwt.json.client.JSONParser;
 
 public class TimeSeriesDecoder extends JSONDecoder<TimeSeriesResponse> {
 
-    private void replaceDateObject(JSONArray rowArray) {
-        JSONObject dateObj = rowArray.get(0).isObject();
-        double value = dateObj.get("v").isNumber().doubleValue();
-        dateObj.put("v", new JSONObject(JsDate.create(value)));
-    }
+  private void replaceDateObject(JSONArray rowArray) {
+    JSONObject dateObj = rowArray.get(0).isObject();
+    double value = dateObj.get("v").isNumber().doubleValue();
+    dateObj.put("v", new JSONObject(JsDate.create(value)));
+  }
 
-    @Override
-    TimeSeriesResponse decode(String jsonText) {
-        TimeSeriesResponse response = new TimeSeriesResponse();
-        response.dataSize = jsonText.length();
-        JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
-        response.serverLoadTime = (long) jsonObj.get("loadtime").isNumber()
-                .doubleValue();
-        response.timeSeriesJSON = jsonObj.get("datatable").isObject();
-        JSONArray rowsObj = response.timeSeriesJSON.get("rows").isArray();
-        response.rows = rowsObj.size();
-        for (int i = 0; i < rowsObj.size(); i++) {
-            replaceDateObject(rowsObj.get(i).isObject().get("c").isArray());
-        }
-        JSONArray jsonMetrics = jsonObj.get("metrics").isArray();
-        for (int i = 0; i < jsonMetrics.size(); i++) {
-            JSONObject metricObj = jsonMetrics.get(i).isObject();
-            response.metrics.add(MetricHeader.fromJSONObject(metricObj));
-        }
-        return response;
+  @Override
+  TimeSeriesResponse decode(String jsonText) {
+    TimeSeriesResponse response = new TimeSeriesResponse();
+    response.dataSize = jsonText.length();
+    JSONObject jsonObj = JSONParser.parseStrict(jsonText).isObject();
+    response.serverLoadTime = (long) jsonObj.get("loadtime").isNumber()
+        .doubleValue();
+    response.timeSeriesJSON = jsonObj.get("datatable").isObject();
+    JSONArray rowsObj = response.timeSeriesJSON.get("rows").isArray();
+    response.rows = rowsObj.size();
+    for (int i = 0; i < rowsObj.size(); i++) {
+      replaceDateObject(rowsObj.get(i).isObject().get("c").isArray());
     }
+    JSONArray jsonMetrics = jsonObj.get("metrics").isArray();
+    for (int i = 0; i < jsonMetrics.size(); i++) {
+      JSONObject metricObj = jsonMetrics.get(i).isObject();
+      response.metrics.add(MetricHeader.fromJSONObject(metricObj));
+    }
+    return response;
+  }
 
 }

@@ -32,137 +32,137 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PlotOptionsWidget extends Composite implements
-        PlotOptionsPresenter.Widget {
+    PlotOptionsPresenter.Widget {
 
-    private static PlotOptionsWidgetUiBinder uiBinder = GWT
-            .create(PlotOptionsWidgetUiBinder.class);
+  private static PlotOptionsWidgetUiBinder uiBinder = GWT
+      .create(PlotOptionsWidgetUiBinder.class);
 
-    interface PlotOptionsWidgetUiBinder extends
-            UiBinder<Widget, PlotOptionsWidget> {
+  interface PlotOptionsWidgetUiBinder extends
+      UiBinder<Widget, PlotOptionsWidget> {
+  }
+
+  interface Style extends CssResource {
+    String selected();
+
+    String active();
+  }
+
+  public PlotOptionsWidget() {
+    color = new ToggleButton(new Image("img/color.png"));
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  @UiField
+  Anchor interactive;
+
+  @UiField
+  Anchor image;
+
+  @UiField
+  RadioButton lineChart;
+
+  @UiField
+  RadioButton surface;
+
+  @UiField
+  HTMLPanel imageOptions;
+
+  @UiField
+  HTMLPanel surfaceOptions;
+
+  @UiField(provided = true)
+  ToggleButton color;
+
+  @UiField
+  Style style;
+
+  private Object selectedMode = null;
+
+  @Override
+  public HasClickHandlers interactiveMode() {
+    return interactive;
+  }
+
+  @Override
+  public HasClickHandlers imageMode() {
+    return image;
+  }
+
+  @Override
+  public void selectedMode(Object button) {
+    if (selectedMode == button) {
+      return;
     }
-
-    interface Style extends CssResource {
-        String selected();
-
-        String active();
+    if (selectedMode != null) {
+      CssHelper.replaceClass((UIObject) selectedMode, style.selected(),
+          style.active());
     }
-
-    public PlotOptionsWidget() {
-        color = new ToggleButton(new Image("img/color.png"));
-        initWidget(uiBinder.createAndBindUi(this));
+    if (button != null) {
+      CssHelper.replaceClass((UIObject) button, style.active(),
+          style.selected());
     }
+    selectedMode = button;
+  }
 
-    @UiField
-    Anchor interactive;
+  @Override
+  public Object selectedMode() {
+    return selectedMode;
+  }
 
-    @UiField
-    Anchor image;
+  @Override
+  public void imageOptionsVisible(boolean visible) {
+    imageOptions.setVisible(visible);
+  }
 
-    @UiField
-    RadioButton lineChart;
+  @Override
+  public HasClickHandlers lineChartButton() {
+    return lineChart;
+  }
 
-    @UiField
-    RadioButton surface;
+  @Override
+  public HasClickHandlers surfaceButton() {
+    return surface;
+  }
 
-    @UiField
-    HTMLPanel imageOptions;
-
-    @UiField
-    HTMLPanel surfaceOptions;
-
-    @UiField(provided = true)
-    ToggleButton color;
-
-    @UiField
-    Style style;
-
-    private Object selectedMode = null;
-
-    @Override
-    public HasClickHandlers interactiveMode() {
-        return interactive;
+  @Override
+  public void setImageTypeSelected(Object selected) {
+    if (selected == lineChart) {
+      lineChart.setValue(true);
+      surfaceOptions.setVisible(false);
+    } else {
+      surface.setValue(true);
+      surfaceOptions.setVisible(true);
     }
+  }
 
-    @Override
-    public HasClickHandlers imageMode() {
-        return image;
-    }
+  @Override
+  public HasClickHandlers colorButton() {
+    return color;
+  }
 
-    @Override
-    public void selectedMode(Object button) {
-        if (selectedMode == button) {
-            return;
-        }
-        if (selectedMode != null) {
-            CssHelper.replaceClass((UIObject) selectedMode, style.selected(),
-                    style.active());
-        }
-        if (button != null) {
-            CssHelper.replaceClass((UIObject) button, style.active(),
-                    style.selected());
-        }
-        selectedMode = button;
-    }
+  @Override
+  public HasValue<Boolean> lineChart() {
+    return lineChart;
+  }
 
-    @Override
-    public Object selectedMode() {
-        return selectedMode;
-    }
+  @Override
+  public HasValue<Boolean> surface() {
+    return surface;
+  }
 
-    @Override
-    public void imageOptionsVisible(boolean visible) {
-        imageOptions.setVisible(visible);
-    }
+  @Override
+  public void setSurfaceOptionsVisible(boolean visible) {
+    surfaceOptions.setVisible(visible);
+  }
 
-    @Override
-    public HasClickHandlers lineChartButton() {
-        return lineChart;
-    }
+  @Override
+  public boolean colorPaletteSelected() {
+    return color.isDown();
+  }
 
-    @Override
-    public HasClickHandlers surfaceButton() {
-        return surface;
-    }
-
-    @Override
-    public void setImageTypeSelected(Object selected) {
-        if (selected == lineChart) {
-            lineChart.setValue(true);
-            surfaceOptions.setVisible(false);
-        } else {
-            surface.setValue(true);
-            surfaceOptions.setVisible(true);
-        }
-    }
-
-    @Override
-    public HasClickHandlers colorButton() {
-        return color;
-    }
-
-    @Override
-    public HasValue<Boolean> lineChart() {
-        return lineChart;
-    }
-
-    @Override
-    public HasValue<Boolean> surface() {
-        return surface;
-    }
-
-    @Override
-    public void setSurfaceOptionsVisible(boolean visible) {
-        surfaceOptions.setVisible(visible);
-    }
-
-    @Override
-    public boolean colorPaletteSelected() {
-        return color.isDown();
-    }
-
-    @Override
-    public void colorPaletteSelected(boolean selected) {
-        color.setDown(selected);
-    }
+  @Override
+  public void colorPaletteSelected(boolean selected) {
+    color.setDown(selected);
+  }
 
 }

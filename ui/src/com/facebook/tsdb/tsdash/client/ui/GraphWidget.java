@@ -27,39 +27,39 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class GraphWidget extends Composite implements
-        GraphPresenter.GraphWidget {
+    GraphPresenter.GraphWidget {
 
-    private static GraphWidgetUiBinder uiBinder = GWT
-            .create(GraphWidgetUiBinder.class);
+  private static GraphWidgetUiBinder uiBinder = GWT
+      .create(GraphWidgetUiBinder.class);
 
-    @UiField
-    HTMLPanel container;
+  @UiField
+  HTMLPanel container;
 
-    @UiField
-    Label replacement;
+  @UiField
+  Label replacement;
 
-    @UiField
-    HTML json;
+  @UiField
+  HTML json;
 
-    interface GraphWidgetUiBinder extends UiBinder<Widget, GraphWidget> {
-    }
+  interface GraphWidgetUiBinder extends UiBinder<Widget, GraphWidget> {
+  }
 
-    public GraphWidget() {
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public GraphWidget() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    @Override
-    public HasWidgets container() {
-        return container;
-    }
+  @Override
+  public HasWidgets container() {
+    return container;
+  }
 
-    @Override
-    public void setDumpJSON(String jsonDump) {
-        json.setHTML(jsonDump);
-    }
+  @Override
+  public void setDumpJSON(String jsonDump) {
+    json.setHTML(jsonDump);
+  }
 
-    @Override
-    public void setReplacementVisible(boolean visible) {
-        replacement.setVisible(visible);
-    }
+  @Override
+  public void setReplacementVisible(boolean visible) {
+    replacement.setVisible(visible);
+  }
 }

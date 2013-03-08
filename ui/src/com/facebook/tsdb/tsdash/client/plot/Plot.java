@@ -29,49 +29,49 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class Plot {
 
-    protected HandlerManager eventBus;
-    protected HasWidgets container;
+  protected HandlerManager eventBus;
+  protected HasWidgets container;
 
-    private Widget current = null;
-    private Widget newPlot = null;
+  private Widget current = null;
+  private Widget newPlot = null;
 
-    public Plot(HandlerManager eventBus, HasWidgets container) {
-        this.eventBus = eventBus;
-        this.container = container;
+  public Plot(HandlerManager eventBus, HasWidgets container) {
+    this.eventBus = eventBus;
+    this.container = container;
+  }
+
+  protected void startRender(Widget plot) {
+    if (newPlot != null && !newPlot.isVisible()) {
+      // this is when the new plot has not been loaded successfully and
+      // it's mostly performed for cleanup
+      container.remove(newPlot);
     }
+    newPlot = plot;
+    container.add(plot);
+  }
 
-    protected void startRender(Widget plot) {
-        if (newPlot != null && !newPlot.isVisible()) {
-            // this is when the new plot has not been loaded successfully and
-            // it's mostly performed for cleanup
-            container.remove(newPlot);
-        }
-        newPlot = plot;
-        container.add(plot);
+  protected void endRender(Widget plot) {
+    if (plot != newPlot) {
+      return;
     }
-
-    protected void endRender(Widget plot) {
-        if (plot != newPlot) {
-            return;
-        }
-        if (current != null) {
-            container.remove(current);
-        }
-        current = newPlot;
-        newPlot = null;
+    if (current != null) {
+      container.remove(current);
     }
+    current = newPlot;
+    newPlot = null;
+  }
 
-    public Widget getWidget() {
-        return current;
-    }
+  public Widget getWidget() {
+    return current;
+  }
 
-    public boolean isRendered() {
-        return current != null;
-    }
+  public boolean isRendered() {
+    return current != null;
+  }
 
-    public abstract void render(final Command onRendered);
+  public abstract void render(final Command onRendered);
 
-    public abstract void loadAndRender(TimeRange timeRange,
-            ArrayList<Metric> metrics, HTTPService service,
-            AsyncCallback<ArrayList<MetricHeader>> callback, Command onRender);
+  public abstract void loadAndRender(TimeRange timeRange,
+      ArrayList<Metric> metrics, HTTPService service,
+      AsyncCallback<ArrayList<MetricHeader>> callback, Command onRender);
 }

@@ -27,30 +27,30 @@ import com.google.gwt.user.client.ui.Widget;
 import com.facebook.tsdb.tsdash.client.presenter.MetricPresenter;
 
 public class MetricOptionWidget extends Composite implements
-        MetricPresenter.MetricOptionWidget {
+    MetricPresenter.MetricOptionWidget {
 
-    private static MetricOptionWidgetUiBinder uiBinder = GWT
-            .create(MetricOptionWidgetUiBinder.class);
+  private static MetricOptionWidgetUiBinder uiBinder = GWT
+      .create(MetricOptionWidgetUiBinder.class);
 
-    interface MetricOptionWidgetUiBinder extends
-            UiBinder<Widget, MetricOptionWidget> {
-    }
+  interface MetricOptionWidgetUiBinder extends
+      UiBinder<Widget, MetricOptionWidget> {
+  }
 
-    @UiField
-    Anchor link;
+  @UiField
+  Anchor link;
 
-    public MetricOptionWidget() {
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public MetricOptionWidget() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    @Override
-    public HasText link() {
-        return link;
-    }
+  @Override
+  public HasText link() {
+    return link;
+  }
 
-    @Override
-    public HasClickHandlers linkButton() {
-        return link;
-    }
+  @Override
+  public HasClickHandlers linkButton() {
+    return link;
+  }
 
 }

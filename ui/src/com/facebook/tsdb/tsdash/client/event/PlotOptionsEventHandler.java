@@ -19,5 +19,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface PlotOptionsEventHandler extends EventHandler {
 
-    void onPlotOptionsChange(PlotOptionsEvent event);
+  void onPlotOptionsChange(PlotOptionsEvent event);
 }

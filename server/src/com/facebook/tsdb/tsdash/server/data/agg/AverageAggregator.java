@@ -17,23 +17,23 @@ package com.facebook.tsdb.tsdash.server.data.agg;
 
 public class AverageAggregator implements Aggregator {
 
-    private double sum = 0.0;
-    private int count = 0;
+  private double sum = 0.0;
+  private int count = 0;
 
-    @Override
-    public void reset() {
-        sum = 0.0;
-        count = 0;
-    }
+  @Override
+  public void reset() {
+    sum = 0.0;
+    count = 0;
+  }
 
-    @Override
-    public void add(double value) {
-        sum += value;
-        count++;
-    }
+  @Override
+  public void add(double value) {
+    sum += value;
+    count++;
+  }
 
-    @Override
-    public double getValue() {
-        return sum / count;
-    }
+  @Override
+  public double getValue() {
+    return sum / count;
+  }
 }

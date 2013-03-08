@@ -35,193 +35,193 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MetricWidget extends Composite implements
-        MetricPresenter.MetricWidget {
+    MetricPresenter.MetricWidget {
 
-    private static MetricWidgetUiBinder uiBinder = GWT
-            .create(MetricWidgetUiBinder.class);
+  private static MetricWidgetUiBinder uiBinder = GWT
+      .create(MetricWidgetUiBinder.class);
 
-    interface MetricWidgetUiBinder extends UiBinder<Widget, MetricWidget> {
+  interface MetricWidgetUiBinder extends UiBinder<Widget, MetricWidget> {
+  }
+
+  public interface Style extends CssResource {
+    String pressedToggleButton();
+
+    String enabled();
+
+    String disabled();
+
+    String blue();
+  }
+
+  private final String name;
+
+  @UiField
+  Label nameLabel;
+
+  @UiField
+  Label delete;
+
+  @UiField
+  Label clone;
+
+  @UiField
+  HTML rightAxis;
+
+  @UiField
+  Label rate;
+
+  @UiField
+  HTMLPanel tags;
+
+  @UiField
+  CheckBox aggregatorButton;
+
+  @UiField
+  ListBox aggregatorName;
+
+  @UiField
+  Button commit;
+
+  @UiField
+  Style style;
+
+  private static String[] aggregators = new String[] { "SUM", "AVG", "MAX",
+      "MIN" };
+
+  public MetricWidget(String name) {
+    this.name = name;
+    initWidget(uiBinder.createAndBindUi(this));
+    nameLabel.setText(name);
+    for (String agg : aggregators) {
+      aggregatorName.addItem(agg, agg);
     }
+  }
 
-    public interface Style extends CssResource {
-        String pressedToggleButton();
+  @Override
+  public HasClickHandlers deleteButton() {
+    return delete;
+  }
 
-        String enabled();
+  @Override
+  public String getName() {
+    return name;
+  }
 
-        String disabled();
+  @Override
+  public HasWidgets tagsContainer() {
+    return tags;
+  }
 
-        String blue();
+  @Override
+  public HasClickHandlers rightAxisButton() {
+    return rightAxis;
+  }
+
+  @Override
+  public HasClickHandlers rateButton() {
+    return rate;
+  }
+
+  @Override
+  public boolean isPressed(Object toggleButton) {
+    if (toggleButton != rightAxis && toggleButton != rate) {
+      return false;
     }
+    UIObject button = (UIObject) toggleButton;
+    return button.getStyleName().contains(style.pressedToggleButton());
+  }
 
-    private final String name;
-
-    @UiField
-    Label nameLabel;
-
-    @UiField
-    Label delete;
-
-    @UiField
-    Label clone;
-
-    @UiField
-    HTML rightAxis;
-
-    @UiField
-    Label rate;
-
-    @UiField
-    HTMLPanel tags;
-
-    @UiField
-    CheckBox aggregatorButton;
-
-    @UiField
-    ListBox aggregatorName;
-
-    @UiField
-    Button commit;
-
-    @UiField
-    Style style;
-
-    private static String[] aggregators = new String[] { "SUM", "AVG", "MAX",
-            "MIN" };
-
-    public MetricWidget(String name) {
-        this.name = name;
-        initWidget(uiBinder.createAndBindUi(this));
-        nameLabel.setText(name);
-        for (String agg : aggregators) {
-            aggregatorName.addItem(agg, agg);
-        }
+  @Override
+  public void pressToggleButton(Object toggleButton, boolean pressed) {
+    if (toggleButton != rightAxis && toggleButton != rate) {
+      return;
     }
-
-    @Override
-    public HasClickHandlers deleteButton() {
-        return delete;
+    UIObject button = (UIObject) toggleButton;
+    if (pressed
+        && !button.getStyleName().contains(style.pressedToggleButton())) {
+      button.addStyleName(style.pressedToggleButton());
+    } else if (!pressed
+        && button.getStyleName().contains(style.pressedToggleButton())) {
+      button.removeStyleName(style.pressedToggleButton());
     }
+  }
 
-    @Override
-    public String getName() {
-        return name;
+  @Override
+  public void setEnabled(boolean enabled) {
+    if (enabled) {
+      CssHelper
+          .replaceClass(nameLabel, style.disabled(), style.enabled());
+      nameLabel.setTitle("");
+      aggregatorButton.setVisible(true);
+      aggregatorName.setVisible(true);
+    } else {
+      CssHelper
+          .replaceClass(nameLabel, style.enabled(), style.disabled());
+      nameLabel.setTitle("no data for this metric");
+      rightAxis.setVisible(false);
+      rate.setVisible(false);
+      aggregatorButton.setVisible(false);
+      aggregatorName.setVisible(false);
     }
+  }
 
-    @Override
-    public HasWidgets tagsContainer() {
-        return tags;
-    }
+  @Override
+  public HasClickHandlers cloneButton() {
+    return clone;
+  }
 
-    @Override
-    public HasClickHandlers rightAxisButton() {
-        return rightAxis;
+  @Override
+  public void markPlottable(boolean plottable) {
+    if (plottable) {
+      CssHelper.replaceClass(nameLabel, style.blue(), style.enabled());
+    } else {
+      CssHelper.replaceClass(nameLabel, style.enabled(), style.blue());
+      nameLabel.setTitle("metric is not plottable");
     }
+  }
 
-    @Override
-    public HasClickHandlers rateButton() {
-        return rate;
-    }
+  @Override
+  public void aggregatorEnabled(boolean enabled) {
+    aggregatorName.setEnabled(enabled);
+    aggregatorButton.setEnabled(enabled);
+  }
 
-    @Override
-    public boolean isPressed(Object toggleButton) {
-        if (toggleButton != rightAxis && toggleButton != rate) {
-            return false;
-        }
-        UIObject button = (UIObject) toggleButton;
-        return button.getStyleName().contains(style.pressedToggleButton());
-    }
+  @Override
+  public String selectedAggregator() {
+    return aggregatorName.getItemText(aggregatorName.getSelectedIndex());
+  }
 
-    @Override
-    public void pressToggleButton(Object toggleButton, boolean pressed) {
-        if (toggleButton != rightAxis && toggleButton != rate) {
-            return;
-        }
-        UIObject button = (UIObject) toggleButton;
-        if (pressed
-                && !button.getStyleName().contains(style.pressedToggleButton())) {
-            button.addStyleName(style.pressedToggleButton());
-        } else if (!pressed
-                && button.getStyleName().contains(style.pressedToggleButton())) {
-            button.removeStyleName(style.pressedToggleButton());
-        }
-    }
+  @Override
+  public HasChangeHandlers aggregator() {
+    return aggregatorName;
+  }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        if (enabled) {
-            CssHelper
-                    .replaceClass(nameLabel, style.disabled(), style.enabled());
-            nameLabel.setTitle("");
-            aggregatorButton.setVisible(true);
-            aggregatorName.setVisible(true);
-        } else {
-            CssHelper
-                    .replaceClass(nameLabel, style.enabled(), style.disabled());
-            nameLabel.setTitle("no data for this metric");
-            rightAxis.setVisible(false);
-            rate.setVisible(false);
-            aggregatorButton.setVisible(false);
-            aggregatorName.setVisible(false);
-        }
-    }
+  @Override
+  public HasValue<Boolean> aggregatorSwitch() {
+    return aggregatorButton;
+  }
 
-    @Override
-    public HasClickHandlers cloneButton() {
-        return clone;
+  @Override
+  public void selectedAggregator(String aggregator) {
+    for (int i = 0; i < aggregators.length; i++) {
+      if (aggregators[i].equals(aggregator)) {
+        aggregatorName.setSelectedIndex(i);
+      }
     }
+  }
 
-    @Override
-    public void markPlottable(boolean plottable) {
-        if (plottable) {
-            CssHelper.replaceClass(nameLabel, style.blue(), style.enabled());
-        } else {
-            CssHelper.replaceClass(nameLabel, style.enabled(), style.blue());
-            nameLabel.setTitle("metric is not plottable");
-        }
-    }
+  @Override
+  public HasClickHandlers commitButton() {
+    return commit;
+  }
 
-    @Override
-    public void aggregatorEnabled(boolean enabled) {
-        aggregatorName.setEnabled(enabled);
-        aggregatorButton.setEnabled(enabled);
-    }
+  @Override
+  public void commitEnabled(boolean enabled) {
+    commit.setEnabled(enabled);
+  }
 
-    @Override
-    public String selectedAggregator() {
-        return aggregatorName.getItemText(aggregatorName.getSelectedIndex());
-    }
-
-    @Override
-    public HasChangeHandlers aggregator() {
-        return aggregatorName;
-    }
-
-    @Override
-    public HasValue<Boolean> aggregatorSwitch() {
-        return aggregatorButton;
-    }
-
-    @Override
-    public void selectedAggregator(String aggregator) {
-        for (int i = 0; i < aggregators.length; i++) {
-            if (aggregators[i].equals(aggregator)) {
-                aggregatorName.setSelectedIndex(i);
-            }
-        }
-    }
-
-    @Override
-    public HasClickHandlers commitButton() {
-        return commit;
-    }
-
-    @Override
-    public void commitEnabled(boolean enabled) {
-        commit.setEnabled(enabled);
-    }
-
-    @Override
-    public void commitVisible(boolean visible) {
-        commit.setVisible(visible);
-    }
+  @Override
+  public void commitVisible(boolean visible) {
+    commit.setVisible(visible);
+  }
 }

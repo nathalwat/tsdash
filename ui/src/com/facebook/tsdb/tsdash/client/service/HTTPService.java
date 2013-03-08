@@ -43,100 +43,100 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class HTTPService {
 
-    public static final int TIMEOUT = 30000; // ms
+  public static final int TIMEOUT = 30000; // ms
 
-    public static final String METRICS_URL = "metrics";
-    public static final String DATA_URL = "data";
-    public static final String PLOT_URL = "plot";
-    public static final String METRIC_HEADER_URL = "header";
+  public static final String METRICS_URL = "metrics";
+  public static final String DATA_URL = "data";
+  public static final String PLOT_URL = "plot";
+  public static final String METRIC_HEADER_URL = "header";
 
-    public void loadMetricsName(
-            final AsyncCallback<ArrayList<String>> callback) {
-        get(callback, METRICS_URL, "", new ArrayListDecoder());
+  public void loadMetricsName(
+      final AsyncCallback<ArrayList<String>> callback) {
+    get(callback, METRICS_URL, "", new ArrayListDecoder());
+  }
+
+  public void loadTimeSeries(TimeRange timeRange, ArrayList<Metric> metrics,
+      final AsyncCallback<TimeSeriesResponse> callback) {
+    // encode parameters
+    JSONObject paramObj = new JSONObject();
+    paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
+    paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
+    JSONArray metricsArray = new JSONArray();
+    for (int i = 0; i < metrics.size(); i++) {
+      if (metrics.get(i).isPlottable()) {
+        metricsArray.set(i, metrics.get(i).toJSONParam());
+      }
     }
+    paramObj.put("metrics", metricsArray);
+    String param = "params=" + paramObj.toString();
+    get(callback, DATA_URL, param, new TimeSeriesDecoder());
+  }
 
-    public void loadTimeSeries(TimeRange timeRange, ArrayList<Metric> metrics,
-            final AsyncCallback<TimeSeriesResponse> callback) {
-        // encode parameters
-        JSONObject paramObj = new JSONObject();
-        paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
-        paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
-        JSONArray metricsArray = new JSONArray();
-        for (int i = 0; i < metrics.size(); i++) {
-            if (metrics.get(i).isPlottable()) {
-                metricsArray.set(i, metrics.get(i).toJSONParam());
-            }
-        }
-        paramObj.put("metrics", metricsArray);
-        String param = "params=" + paramObj.toString();
-        get(callback, DATA_URL, param, new TimeSeriesDecoder());
+  public void loadMetricHeader(Metric metric, TimeRange timeRange,
+      final AsyncCallback<MetricHeader> callback) {
+    JSONObject paramObj = new JSONObject();
+    paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
+    paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
+    paramObj.put("metric", new JSONString(metric.name));
+    paramObj.put("tags", metric.encodeTags());
+    String encodedParams = "params=" + paramObj.toString();
+    get(callback, METRIC_HEADER_URL, encodedParams,
+        new MetricHeaderDecoder());
+  }
+
+  public void loadPlot(TimeRange timeRange, ArrayList<Metric> metrics,
+      int width, int height, boolean surface, boolean palette,
+      final AsyncCallback<PlotResponse> callback) {
+    JSONObject paramObj = new JSONObject();
+    paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
+    paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
+    paramObj.put("width", new JSONNumber(width));
+    paramObj.put("height", new JSONNumber(height));
+    paramObj.put("surface", JSONBoolean.getInstance(surface));
+    paramObj.put("palette", JSONBoolean.getInstance(palette));
+    JSONArray metricsArray = new JSONArray();
+    for (int i = 0; i < metrics.size(); i++) {
+      if (metrics.get(i).isPlottable()) {
+        metricsArray.set(i, metrics.get(i).toJSONParam());
+      }
     }
+    paramObj.put("metrics", metricsArray);
+    String param = "params=" + paramObj.toString();
+    get(callback, PLOT_URL, param, new PlotResponseDecoder());
+  }
 
-    public void loadMetricHeader(Metric metric, TimeRange timeRange,
-            final AsyncCallback<MetricHeader> callback) {
-        JSONObject paramObj = new JSONObject();
-        paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
-        paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
-        paramObj.put("metric", new JSONString(metric.name));
-        paramObj.put("tags", metric.encodeTags());
-        String encodedParams = "params=" + paramObj.toString();
-        get(callback, METRIC_HEADER_URL, encodedParams,
-                new MetricHeaderDecoder());
-    }
-
-    public void loadPlot(TimeRange timeRange, ArrayList<Metric> metrics,
-            int width, int height, boolean surface, boolean palette,
-            final AsyncCallback<PlotResponse> callback) {
-        JSONObject paramObj = new JSONObject();
-        paramObj.put("tsFrom", new JSONNumber(timeRange.from / 1000));
-        paramObj.put("tsTo", new JSONNumber(timeRange.to / 1000));
-        paramObj.put("width", new JSONNumber(width));
-        paramObj.put("height", new JSONNumber(height));
-        paramObj.put("surface", JSONBoolean.getInstance(surface));
-        paramObj.put("palette", JSONBoolean.getInstance(palette));
-        JSONArray metricsArray = new JSONArray();
-        for (int i = 0; i < metrics.size(); i++) {
-            if (metrics.get(i).isPlottable()) {
-                metricsArray.set(i, metrics.get(i).toJSONParam());
-            }
-        }
-        paramObj.put("metrics", metricsArray);
-        String param = "params=" + paramObj.toString();
-        get(callback, PLOT_URL, param, new PlotResponseDecoder());
-    }
-
-    private <T> void get(final AsyncCallback<T> callback, final String url,
-            String params, final JSONDecoder<T> decoder) {
-        RequestBuilder req = new RequestBuilder(RequestBuilder.GET, url + "?"
-                + params);
-        req.setTimeoutMillis(TIMEOUT);
-        req.setCallback(new RequestCallback() {
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                try {
-                    T result = decoder.tryDecodeFromService(response.getText());
-                    callback.onSuccess(result);
-                } catch (JSONParseException e) {
-                    GWT.log("Error parsing data from '" + url + "'", e);
-                    callback.onFailure(e);
-                } catch (ServiceException e) {
-                    GWT.log("Error in remote service", e);
-                    callback.onFailure(e);
-                }
-            }
-
-            @Override
-            public void onError(Request request, Throwable e) {
-                GWT.log("Error sending GET request to '" + url + "'", e);
-                callback.onFailure(e);
-            }
-        });
+  private <T> void get(final AsyncCallback<T> callback, final String url,
+      String params, final JSONDecoder<T> decoder) {
+    RequestBuilder req = new RequestBuilder(RequestBuilder.GET, url + "?"
+        + params);
+    req.setTimeoutMillis(TIMEOUT);
+    req.setCallback(new RequestCallback() {
+      @Override
+      public void onResponseReceived(Request request, Response response) {
         try {
-            req.send();
-        } catch (RequestException e) {
-            GWT.log("Request exception for '" + url + "'", e);
-            callback.onFailure(e);
+          T result = decoder.tryDecodeFromService(response.getText());
+          callback.onSuccess(result);
+        } catch (JSONParseException e) {
+          GWT.log("Error parsing data from '" + url + "'", e);
+          callback.onFailure(e);
+        } catch (ServiceException e) {
+          GWT.log("Error in remote service", e);
+          callback.onFailure(e);
         }
+      }
+
+      @Override
+      public void onError(Request request, Throwable e) {
+        GWT.log("Error sending GET request to '" + url + "'", e);
+        callback.onFailure(e);
+      }
+    });
+    try {
+      req.send();
+    } catch (RequestException e) {
+      GWT.log("Request exception for '" + url + "'", e);
+      callback.onFailure(e);
     }
+  }
 
 }

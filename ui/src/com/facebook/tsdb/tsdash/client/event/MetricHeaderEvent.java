@@ -22,26 +22,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class MetricHeaderEvent extends GwtEvent<MetricHeaderEventHandler> {
 
-    public static final GwtEvent.Type<MetricHeaderEventHandler> TYPE =
-        new GwtEvent.Type<MetricHeaderEventHandler>();
+  public static final GwtEvent.Type<MetricHeaderEventHandler> TYPE =
+    new GwtEvent.Type<MetricHeaderEventHandler>();
 
-    private final ArrayList<MetricHeader> headers;
+  private final ArrayList<MetricHeader> headers;
 
-    public MetricHeaderEvent(ArrayList<MetricHeader> headers) {
-        this.headers = headers;
-    }
+  public MetricHeaderEvent(ArrayList<MetricHeader> headers) {
+    this.headers = headers;
+  }
 
-    public ArrayList<MetricHeader> getHeaders() {
-        return headers;
-    }
+  public ArrayList<MetricHeader> getHeaders() {
+    return headers;
+  }
 
-    @Override
-    public GwtEvent.Type<MetricHeaderEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<MetricHeaderEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(MetricHeaderEventHandler handler) {
-        handler.onHeadersLoaded(this);
-    }
+  @Override
+  protected void dispatch(MetricHeaderEventHandler handler) {
+    handler.onHeadersLoaded(this);
+  }
 }

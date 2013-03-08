@@ -19,39 +19,39 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ViewChangeEvent extends GwtEvent<ViewChangeEventHandler> {
 
-    public static final GwtEvent.Type<ViewChangeEventHandler> TYPE =
-        new GwtEvent.Type<ViewChangeEventHandler>();
+  public static final GwtEvent.Type<ViewChangeEventHandler> TYPE =
+    new GwtEvent.Type<ViewChangeEventHandler>();
 
-    public enum View {
-        GRAPH, LOG;
-    }
+  public enum View {
+    GRAPH, LOG;
+  }
 
-    private final View view;
+  private final View view;
 
-    public ViewChangeEvent(View view) {
-        this.view = view;
-    }
+  public ViewChangeEvent(View view) {
+    this.view = view;
+  }
 
-    public ViewChangeEvent(String name) {
-        this.view = View.valueOf(name);
-    }
+  public ViewChangeEvent(String name) {
+    this.view = View.valueOf(name);
+  }
 
-    public View getView() {
-        return view;
-    }
+  public View getView() {
+    return view;
+  }
 
-    public String getViewToken() {
-        return view.toString().toLowerCase();
-    }
+  public String getViewToken() {
+    return view.toString().toLowerCase();
+  }
 
-    @Override
-    public GwtEvent.Type<ViewChangeEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+  @Override
+  public GwtEvent.Type<ViewChangeEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 
-    @Override
-    protected void dispatch(ViewChangeEventHandler handler) {
-        handler.onChange(this);
-    }
+  @Override
+  protected void dispatch(ViewChangeEventHandler handler) {
+    handler.onChange(this);
+  }
 
 }

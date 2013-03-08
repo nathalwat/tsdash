@@ -23,31 +23,31 @@ import com.facebook.tsdb.tsdash.server.model.ID;
 
 public class RowTagComparator extends WritableByteArrayComparable {
 
-    private final HashSet<byte[]> rawTags;
-    private final byte[] rawTag = new byte[2 * ID.BYTES];
+  private final HashSet<byte[]> rawTags;
+  private final byte[] rawTag = new byte[2 * ID.BYTES];
 
-    public RowTagComparator(HashSet<byte[]> rawTags) {
-        this.rawTags = rawTags;
-    }
+  public RowTagComparator(HashSet<byte[]> rawTags) {
+    this.rawTags = rawTags;
+  }
 
-    @Override
-    public int compareTo(byte[] value) {
-        int prefixLen = RowRange.prefixBytes();
-        int tagsNo = (value.length - prefixLen) / (2 * ID.BYTES);
-        if (tagsNo <= 0) {
-            // the row has no tags
-            return 0;
-        }
-        int matches = 0;
-        for (int t = 0; t < tagsNo; t++) {
-            for (int i = 0; i < 2 * ID.BYTES; i++) {
-                rawTag[i] = value[prefixLen + t * 2 * ID.BYTES + i];
-            }
-            if (rawTags.contains(rawTag)) {
-                matches++;
-            }
-        }
-        // it should be 0 - equal - when all tags have been matched
-        return matches - tagsNo;
+  @Override
+  public int compareTo(byte[] value) {
+    int prefixLen = RowRange.prefixBytes();
+    int tagsNo = (value.length - prefixLen) / (2 * ID.BYTES);
+    if (tagsNo <= 0) {
+      // the row has no tags
+      return 0;
     }
+    int matches = 0;
+    for (int t = 0; t < tagsNo; t++) {
+      for (int i = 0; i < 2 * ID.BYTES; i++) {
+        rawTag[i] = value[prefixLen + t * 2 * ID.BYTES + i];
+      }
+      if (rawTags.contains(rawTag)) {
+        matches++;
+      }
+    }
+    // it should be 0 - equal - when all tags have been matched
+    return matches - tagsNo;
+  }
 }

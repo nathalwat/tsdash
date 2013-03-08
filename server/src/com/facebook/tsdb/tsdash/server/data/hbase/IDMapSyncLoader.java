@@ -33,40 +33,40 @@ import com.google.common.collect.ImmutableBiMap;
  */
 public class IDMapSyncLoader {
 
-    private static final byte[] ID_FAMILY = HBaseDataProvider.ID_FAMILY
-            .getBytes();
+  private static final byte[] ID_FAMILY = HBaseDataProvider.ID_FAMILY
+      .getBytes();
 
-    private HTable IDsTable = null;
-    private ImmutableBiMap<String, ID> map = null;
-    private final byte[] qualifier;
+  private HTable IDsTable = null;
+  private ImmutableBiMap<String, ID> map = null;
+  private final byte[] qualifier;
 
-    public IDMapSyncLoader(byte[] qualifier) {
-        this.qualifier = qualifier;
+  public IDMapSyncLoader(byte[] qualifier) {
+    this.qualifier = qualifier;
+  }
+
+  public synchronized ImmutableBiMap<String, ID> get() throws IOException {
+    if (map == null) {
+      map = loadMap(qualifier);
     }
+    return map;
+  }
 
-    public synchronized ImmutableBiMap<String, ID> get() throws IOException {
-        if (map == null) {
-            map = loadMap(qualifier);
-        }
-        return map;
+  private ImmutableBiMap<String, ID> loadMap(byte[] qualifier)
+      throws IOException {
+    if (IDsTable == null) {
+      IDsTable = HBaseConnection.getIDsTableConn();
     }
-
-    private ImmutableBiMap<String, ID> loadMap(byte[] qualifier)
-            throws IOException {
-        if (IDsTable == null) {
-            IDsTable = HBaseConnection.getIDsTableConn();
-        }
-        ResultScanner scanner = IDsTable.getScanner(ID_FAMILY, qualifier);
-        ImmutableBiMap.Builder<String, ID> mapBuilder =
-            new ImmutableBiMap.Builder<String, ID>();
-        for (Result result : scanner) {
-            String rowKey = (new String(result.getRow())).trim();
-            if (!rowKey.equals("")) {
-                byte[] value = result.getValue(ID_FAMILY, qualifier);
-                mapBuilder.put(rowKey, new ID(value));
-            }
-        }
-        ImmutableBiMap<String, ID> map = mapBuilder.build();
-        return map;
+    ResultScanner scanner = IDsTable.getScanner(ID_FAMILY, qualifier);
+    ImmutableBiMap.Builder<String, ID> mapBuilder =
+      new ImmutableBiMap.Builder<String, ID>();
+    for (Result result : scanner) {
+      String rowKey = (new String(result.getRow())).trim();
+      if (!rowKey.equals("")) {
+        byte[] value = result.getValue(ID_FAMILY, qualifier);
+        mapBuilder.put(rowKey, new ID(value));
+      }
     }
+    ImmutableBiMap<String, ID> map = mapBuilder.build();
+    return map;
+  }
 }

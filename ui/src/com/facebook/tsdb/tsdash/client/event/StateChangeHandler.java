@@ -19,15 +19,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface StateChangeHandler extends EventHandler {
 
-    public void onViewChange(StateChangeEvent event);
+  public void onViewChange(StateChangeEvent event);
 
-    public void onMetricChange(StateChangeEvent event);
+  public void onMetricChange(StateChangeEvent event);
 
-    public void onTimeChange(StateChangeEvent event);
+  public void onTimeChange(StateChangeEvent event);
 
-    public void onPlotParamsChange(StateChangeEvent event);
+  public void onPlotParamsChange(StateChangeEvent event);
 
-    public void onAutoReloadChange(StateChangeEvent event);
+  public void onAutoReloadChange(StateChangeEvent event);
 
-    public void onScreenChange(StateChangeEvent event);
+  public void onScreenChange(StateChangeEvent event);
 }

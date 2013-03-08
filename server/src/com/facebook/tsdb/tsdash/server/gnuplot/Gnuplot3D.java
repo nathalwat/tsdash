@@ -26,54 +26,54 @@ import com.facebook.tsdb.tsdash.server.model.TagsArray;
 
 public class Gnuplot3D extends GnuplotProcess {
 
-    public Gnuplot3D() throws Exception {
-        super();
-    }
+  public Gnuplot3D() throws Exception {
+    super();
+  }
 
-    private void writeGridDataPoints(Metric metric, String dataPipe)
-            throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(dataPipe)));
-        int lineCount = 0;
-        // is important to add to walk the time-series by using the keys because
-        // the are ordered
-        for (TagsArray header : metric.timeSeries.keySet()) {
-            for (DataPoint p : metric.timeSeries.get(header)) {
-                writer.write("" + lineCount + '\t' + p.ts + '\t' + p.value);
-                writer.newLine();
-            }
-            writer.newLine();
-            lineCount++;
-        }
-        writer.close();
+  private void writeGridDataPoints(Metric metric, String dataPipe)
+      throws IOException {
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(dataPipe)));
+    int lineCount = 0;
+    // is important to add to walk the time-series by using the keys because
+    // the are ordered
+    for (TagsArray header : metric.timeSeries.keySet()) {
+      for (DataPoint p : metric.timeSeries.get(header)) {
+        writer.write("" + lineCount + '\t' + p.ts + '\t' + p.value);
+        writer.newLine();
+      }
+      writer.newLine();
+      lineCount++;
     }
+    writer.close();
+  }
 
-    @Override
-    public String plot(Metric[] metrics, GnuplotOptions options)
-            throws Exception {
-        createPipes(metrics.length);
-        options.clearDataSources();
-        int i = 0;
-        for (Metric metric : metrics) {
-            metric.alignAllTimeSeries();
-            if (metric.hasData()) {
-                options.addDataSource(new DataSource(getPipeFilename(i), metric
-                        .getName()));
-                i++;
-            }
-        }
-        String outputFilename = getOutputFilename(options);
-        options.setOutput(outputFilename);
-        gnuplotStdin.write(options.toScript());
-        gnuplotStdin.close();
-        i = 0;
-        for (Metric metric : metrics) {
-            if (metric.hasData()) {
-                writeGridDataPoints(metric, getPipeFilename(i));
-                i++;
-            }
-        }
-        return outputFilename;
+  @Override
+  public String plot(Metric[] metrics, GnuplotOptions options)
+      throws Exception {
+    createPipes(metrics.length);
+    options.clearDataSources();
+    int i = 0;
+    for (Metric metric : metrics) {
+      metric.alignAllTimeSeries();
+      if (metric.hasData()) {
+        options.addDataSource(new DataSource(getPipeFilename(i), metric
+            .getName()));
+        i++;
+      }
     }
+    String outputFilename = getOutputFilename(options);
+    options.setOutput(outputFilename);
+    gnuplotStdin.write(options.toScript());
+    gnuplotStdin.close();
+    i = 0;
+    for (Metric metric : metrics) {
+      if (metric.hasData()) {
+        writeGridDataPoints(metric, getPipeFilename(i));
+        i++;
+      }
+    }
+    return outputFilename;
+  }
 
 }

@@ -20,11 +20,11 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class PresenterEvent<T extends EventHandler> extends
-        GwtEvent<T> {
+    GwtEvent<T> {
 
-    protected Presenter source = null;
+  protected Presenter source = null;
 
-    public Presenter getPresenterSource() {
-        return source;
-    }
+  public Presenter getPresenterSource() {
+    return source;
+  }
 }

@@ -19,26 +19,26 @@ import com.google.gwt.user.client.ui.UIObject;
 
 public class CssHelper {
 
-    public static void toggleClass(UIObject el, String cssClass) {
-        if (el == null) {
-            return;
-        }
-        if (el.getStyleName().contains(cssClass)) {
-            el.removeStyleName(cssClass);
-        } else {
-            el.addStyleName(cssClass);
-        }
+  public static void toggleClass(UIObject el, String cssClass) {
+    if (el == null) {
+      return;
     }
+    if (el.getStyleName().contains(cssClass)) {
+      el.removeStyleName(cssClass);
+    } else {
+      el.addStyleName(cssClass);
+    }
+  }
 
-    public static void replaceClass(UIObject el, String cssClass,
-            String replacement) {
-        if (el == null) {
-            return;
-        }
-        if (el.getStyleName().contains(cssClass)) {
-            el.removeStyleName(cssClass);
-        }
-        // add the replacement anyway
-        el.addStyleName(replacement);
+  public static void replaceClass(UIObject el, String cssClass,
+      String replacement) {
+    if (el == null) {
+      return;
     }
+    if (el.getStyleName().contains(cssClass)) {
+      el.removeStyleName(cssClass);
+    }
+    // add the replacement anyway
+    el.addStyleName(replacement);
+  }
 }

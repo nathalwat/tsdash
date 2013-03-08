@@ -22,45 +22,45 @@ import com.facebook.tsdb.tsdash.server.data.hbase.DataPointQualifier;
 
 public class DataPoint implements Comparable<DataPoint> {
 
-    public long ts;
-    public double value;
+  public long ts;
+  public double value;
 
-    public DataPoint(long ts, double value) {
-        this.ts = ts;
-        this.value = value;
-    }
+  public DataPoint(long ts, double value) {
+    this.ts = ts;
+    this.value = value;
+  }
 
-    public int intValue() {
-        return (int) value;
-    }
+  public int intValue() {
+    return (int) value;
+  }
 
-    @Override
-    public String toString() {
-        return "(" + ts + " -> " + String.format("%.3f", value) + ")";
-    }
+  @Override
+  public String toString() {
+    return "(" + ts + " -> " + String.format("%.3f", value) + ")";
+  }
 
-    public static double decodeValue(byte[] encoded, byte[] qualifier) {
-        if (DataPointQualifier.isFloat(qualifier)) {
-            if (encoded.length == 8) {
-                return Float.intBitsToFloat(Bytes.toInt(encoded, 4));
-            } else {
-                // length is 4
-                return Float.intBitsToFloat(Bytes.toInt(encoded));
-            }
-        }
-        return Bytes.toLong(encoded);
+  public static double decodeValue(byte[] encoded, byte[] qualifier) {
+    if (DataPointQualifier.isFloat(qualifier)) {
+      if (encoded.length == 8) {
+        return Float.intBitsToFloat(Bytes.toInt(encoded, 4));
+      } else {
+        // length is 4
+        return Float.intBitsToFloat(Bytes.toInt(encoded));
+      }
     }
+    return Bytes.toLong(encoded);
+  }
 
-    @Override
-    public int compareTo(DataPoint other) {
-        return (int) (ts - other.ts);
-    }
+  @Override
+  public int compareTo(DataPoint other) {
+    return (int) (ts - other.ts);
+  }
 
-    @SuppressWarnings("unchecked")
-    public JSONArray toJSONObject() {
-        JSONArray obj = new JSONArray();
-        obj.add(ts);
-        obj.add(value);
-        return obj;
-    }
+  @SuppressWarnings("unchecked")
+  public JSONArray toJSONObject() {
+    JSONArray obj = new JSONArray();
+    obj.add(ts);
+    obj.add(value);
+    return obj;
+  }
 }
