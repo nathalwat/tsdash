@@ -15,76 +15,76 @@ under the License.
  -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-		.container {
-	     padding: 1px 5px 1px 1px;
-		}
-		
-		.container .status, .container .advice {
-	   float: right;
-		}
-		
-		.container .loading, .container .iconbutton, .container .period {
-	   float: left;
-		}
-		
-		.iconbutton {
-	    padding: 5px;
-	    margin: 3px;
-	    background-color: #eee;
-	    border: 1px solid #ccc;
-	    cursor: pointer;
-	    font-weight: bold;
-	  }
-		
-		.iconbutton:hover {
-	     border-color: #999;
-	   }
-		
-		.iconbutton:active {
-	     border-color: #666;
-		}
-		
-		.iconbutton img {
-	     vertical-align: middle;
-	     margin-right: 5px;
-		}
-		
-		.status {
-	     padding: 3px;
-	     margin: 9px 3px 1px 3px;
-       color: #666;
-	  }
-		
-		.seconds {
-	     font-weight: bold;
-	     color: #333;
-		}
-		
-		.period {
-	     padding: 3px;
-	     margin: 5px 5px 1px 3px;
-	     color: #666;
-		}
-	  
-	  .loading {
-	    margin: 7px 3px 1px 3px;
-	    line-height: 24px;
-	    color: #666;
-	 }
-	 
-	 .loading img {
-	    vertical-align: middle;
-	    padding: 3px;
-	 }
-	 
-	 .loadingStatus {
-	    display: inline;
-	    padding: 3px;
-	 }
-	</ui:style>
-	<g:HTMLPanel styleName="{style.container} autoreload">
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+    .container {
+      padding: 1px 5px 1px 1px;
+    }
+        
+    .container .status, .container .advice {
+      float: right;
+    }
+        
+    .container .loading, .container .iconbutton, .container .period {
+      float: left;
+    }
+        
+    .iconbutton {
+      padding: 5px;
+      margin: 3px;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-weight: bold;
+    }
+        
+    .iconbutton:hover {
+      border-color: #999;
+    }
+        
+    .iconbutton:active {
+      border-color: #666;
+    }
+        
+    .iconbutton img {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+        
+    .status {
+      padding: 3px;
+      margin: 9px 3px 1px 3px;
+      color: #666;
+    }
+        
+    .seconds {
+      font-weight: bold;
+      color: #333;
+    }
+        
+    .period {
+      padding: 3px;
+      margin: 5px 5px 1px 3px;
+      color: #666;
+    }
+      
+    .loading {
+      margin: 7px 3px 1px 3px;
+      line-height: 24px;
+      color: #666;
+    }
+     
+    .loading img {
+      vertical-align: middle;
+      padding: 3px;
+    }
+     
+    .loadingStatus {
+      display: inline;
+      padding: 3px;
+    }
+  </ui:style>
+  <g:HTMLPanel styleName="{style.container} autoreload">
     <g:HTML ui:field="start" styleName="{style.iconbutton}" visible="false">
       <img src="img/refresh.png"/>auto reload
     </g:HTML>
@@ -92,17 +92,21 @@ under the License.
       <img src="img/control_stop.png"/>stop reloading
     </g:HTML>
     <g:HTMLPanel styleName="{style.period}" ui:field="period">
-       reload period
-	    <g:ListBox ui:field="periodOption">
-	    </g:ListBox>
+      reload period
+      <g:ListBox ui:field="periodOption">
+      </g:ListBox>
     </g:HTMLPanel>
     <g:HTMLPanel ui:field="loading" styleName="{style.loading}" visible="false">
       <g:Image url="img/loader.gif"></g:Image>
-      <g:Label styleName="{style.loadingStatus}" ui:field="loadingStatus">loading...</g:Label>
+      <g:Label styleName="{style.loadingStatus}" ui:field="loadingStatus">
+        loading...
+      </g:Label>
     </g:HTMLPanel>
-    <g:HTMLPanel styleName="{style.status}" ui:field="status">reloading in 
-     <g:Anchor ui:field="seconds" styleName="{style.seconds}">3</g:Anchor> seconds
+    <g:HTMLPanel styleName="{style.status}" ui:field="status">
+      reloading in 
+      <g:Anchor ui:field="seconds" styleName="{style.seconds}">3</g:Anchor>
+      seconds
     </g:HTMLPanel>
     <g:HTML styleName="clear"></g:HTML>
-	</g:HTMLPanel>
+  </g:HTMLPanel>
 </ui:UiBinder> 

@@ -25,12 +25,14 @@
 
   <display-name>TSDash</display-name>
   <description>
-     TSDash - UI for OpenTSDB
+    TSDash - UI for OpenTSDB
   </description>
 
   <servlet>
     <servlet-name>MetricsEndpoint</servlet-name>
-    <servlet-class>com.facebook.tsdb.tsdash.server.MetricsEndpoint</servlet-class>
+    <servlet-class>
+      com.facebook.tsdb.tsdash.server.MetricsEndpoint
+    </servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>MetricsEndpoint</servlet-name>
@@ -39,7 +41,9 @@
 
   <servlet>
     <servlet-name>MetricHeaderEndpoint</servlet-name>
-    <servlet-class>com.facebook.tsdb.tsdash.server.MetricHeaderEndpoint</servlet-class>
+    <servlet-class>
+      com.facebook.tsdb.tsdash.server.MetricHeaderEndpoint
+    </servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>MetricHeaderEndpoint</servlet-name>

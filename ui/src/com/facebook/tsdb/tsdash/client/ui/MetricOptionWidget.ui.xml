@@ -15,21 +15,21 @@ under the License.
  -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	 .container {
-    padding: 3px;
-	}
-	
-	.container:hover {
-	  background-color: #eee;
-	}
-	
-	.container a {
-	   cursor: pointer;
-	}
-	</ui:style>
-	<g:HTMLPanel styleName="{style.container}">
-		<g:Anchor ui:field="link"></g:Anchor>
-	</g:HTMLPanel>
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+    .container {
+      padding: 3px;
+    }
+    
+    .container:hover {
+      background-color: #eee;
+    }
+    
+    .container a {
+      cursor: pointer;
+    }
+  </ui:style>
+  <g:HTMLPanel styleName="{style.container}">
+    <g:Anchor ui:field="link"></g:Anchor>
+  </g:HTMLPanel>
 </ui:UiBinder> 

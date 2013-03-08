@@ -15,31 +15,31 @@ under the License.
  -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	.container {
-	   padding: 5px;
-	   color: white;
-	   font-weight: bold;
-	   background-color: #C40E3B;
-	   border: 1px solid #8A0626;
-	   font-size: 12px;
-	}
-	
-  .container a {
-	   color: #FFEDF2;
-     text-decoration: underline;
-     font-size: 11px;
-     cursor: pointer;
-     margin: 3px;
-	}
-	
-	.title {
-	 display: inline;
-	}
-	</ui:style>
-	<g:HTMLPanel styleName="{style.container}" visible="false">
-		<g:Label styleName="{style.title}" ui:field="title"></g:Label>
-		<g:Anchor ui:field="detailsButton">details</g:Anchor>
-	</g:HTMLPanel>
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+    .container {
+      padding: 5px;
+      color: white;
+      font-weight: bold;
+      background-color: #C40E3B;
+      border: 1px solid #8A0626;
+      font-size: 12px;
+    }
+    
+    .container a {
+      color: #FFEDF2;
+      text-decoration: underline;
+      font-size: 11px;
+      cursor: pointer;
+      margin: 3px;
+    }
+    
+    .title {
+      display: inline;
+    }
+  </ui:style>
+  <g:HTMLPanel styleName="{style.container}" visible="false">
+    <g:Label styleName="{style.title}" ui:field="title"></g:Label>
+    <g:Anchor ui:field="detailsButton">details</g:Anchor>
+  </g:HTMLPanel>
 </ui:UiBinder> 
