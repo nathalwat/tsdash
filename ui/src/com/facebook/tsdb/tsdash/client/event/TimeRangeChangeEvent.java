@@ -19,10 +19,11 @@ import com.facebook.tsdb.tsdash.client.model.TimeRange;
 import com.facebook.tsdb.tsdash.client.model.ApplicationState.TimeMode;
 import com.google.gwt.event.shared.GwtEvent;
 
-public class TimeRangeChangeEvent extends GwtEvent<TimeRangeChangeEventHandler> {
+public class TimeRangeChangeEvent
+    extends GwtEvent<TimeRangeChangeEventHandler> {
 
   public static final GwtEvent.Type<TimeRangeChangeEventHandler> TYPE =
-    new GwtEvent.Type<TimeRangeChangeEventHandler>();
+      new GwtEvent.Type<TimeRangeChangeEventHandler>();
 
   private final TimeMode mode;
   private final TimeRange timeRange;
